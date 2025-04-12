@@ -1,0 +1,56 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+ /* General form styling */
+.emailForm {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Input and textarea fields */
+.emailForm input,
+.emailForm textarea {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.emailForm input:focus,
+.emailForm textarea:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+/* Submit button styling */
+.emailForm button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4a90e2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.emailForm button:hover {
+  background-color: #357abd;
+}
+
+/* Optional: Add some responsive behavior */
+@media (max-width: 600px) {
+  .emailForm {
+    padding: 20px;
+  }
+}

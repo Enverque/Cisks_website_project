@@ -1,0 +1,42 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.Book_name_slider {
+    position: relative;
+    width: 90%; 
+    height: 50px;
+    overflow: hidden;
+    margin: 1rem 5%;
+
+}
+.book_slider_center {
+    position: relative;
+    width: 100%;
+}
+.book_slider_box {
+    position: absolute;
+    color: rgb(0, 78, 155);
+    align-content: center;
+    padding: 5px 0;
+    font-size: 17px;
+    animation: slideBook 30s infinite linear;
+    width: 100%;
+    white-space: nowrap;
+}
+
+@keyframes slideBook {
+    0% {
+        transform: translateX(-200%) rotateY(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(auto) rotateY(10deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%) rotateY(0deg);
+        opacity: 1;
+    }
+}

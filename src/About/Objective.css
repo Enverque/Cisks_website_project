@@ -1,0 +1,118 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.objective-section {
+    padding: 4rem 1rem;
+    background: #f8fafc;
+}
+
+.objective-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.objective-heading {
+    font-size: 2.5rem;
+    color: #1a365d;
+    text-align: center;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+}
+
+.objective-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease 0.2s;
+}
+
+.objective-intro {
+    font-size: 1.1rem;
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.objective-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.objective-point {
+    padding: 1rem;
+    margin: 0.75rem 0;
+    background: #f8fafc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.4s ease;
+}
+
+.point-number {
+    font-weight: 600;
+    color: #2b6cb0;
+    margin-right: 1rem;
+    min-width: 2rem;
+}
+
+/* Animations */
+.fade-in-up {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transform: translateX(0) !important;
+}
+
+/* Hover Effects */
+.objective-point:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .objective-section {
+        padding: 2rem 1rem;
+    }
+
+    .objective-heading {
+        font-size: 2rem;
+    }
+
+    .objective-content {
+        padding: 1.5rem;
+    }
+
+    .objective-point {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .point-number {
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .objective-heading {
+        font-size: 1.75rem;
+    }
+
+    .objective-intro {
+        font-size: 1rem;
+    }
+
+    .objective-point {
+        font-size: 0.9rem;
+    }
+}

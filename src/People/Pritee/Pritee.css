@@ -1,0 +1,131 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.Card_Pritee {
+  min-height: 450px;
+  width: 80%; /* Matching width with Front_Card_Pritee */
+  max-width: 320px;
+  line-height: 1.5rem;
+  text-align: start;
+  transform-style: preserve-3d;
+  transition: all 0.5s ease;
+  position: relative;
+  border: 2px solid rgb(255, 255, 255);
+  margin: 10px auto;
+  perspective: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+}
+
+.Card_Pritee:hover {
+  transform: rotateY(180deg);
+}
+
+.Front_Card_Pritee, .Back_Card_Pritee {
+  min-height: 100%;
+  width: 100%; /* Ensure inner cards fully use parent width */
+  position: absolute;
+  backface-visibility: hidden;
+  border-radius: 1rem;
+  overflow-y: hidden;
+}
+
+.Front_Card_Pritee {
+  background-color: rgb(255, 255, 255);
+  color: rgb(31, 47, 96);
+  max-height: 100%;
+  border-radius: 25px;
+  box-shadow: 2px 2px 2px 2px rgb(157, 166, 172);
+}
+
+.Lower_Front_Card_Pritee {
+  color: rgb(0, 25, 94);
+  padding: 0 10px;
+  border-radius: 25px;
+}
+
+.Upper_Front_Card_Pritee {
+  background-color: #13547a; /* Blue color */
+  color: white;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  border-radius: 25px 25px 0 25px;
+}
+
+.Back_Card_Pritee {
+  line-height: 1.3rem;
+  background-color: #dae7ea;
+  color: rgb(0, 25, 94);
+  transform: rotateY(180deg);
+  padding: 15px;
+  border-radius: 25px;
+  box-shadow: 2px 2px 2px 2px rgb(157, 166, 172);
+}
+
+.Name, .position {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.Read_Pritee {
+  position: relative;
+  height: 30px;
+  width: 100px;
+  background-color: #4070f4; /* Blue color */
+  color: rgb(219, 219, 251);
+  border-radius: 0.3rem;
+  text-align: center;
+  display: inline-block;
+  margin-top: 10px;
+  padding-bottom: 5px;
+}
+
+.Pritee_img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 4px solid rgb(230, 230, 230);
+  display: block;
+  margin: 10px auto;
+}
+
+.Pritee_email {
+  margin-top: 1rem;
+}
+
+.Pritee_phone, .Pritee_address, .Department_Pritee {
+  margin-top: -1rem;
+}
+
+@media (min-width: 600px) {
+  .Card_Pritee {
+    max-width: 320px;
+  }
+
+  .Pritee_img {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .Faculty_img {
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .Card_Pritee {
+    margin: 20px;
+    max-width: 350px;
+  }
+
+  .Pritee_img {
+    width: 160px;
+    height: 160px;
+  }
+}

@@ -1,0 +1,74 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.Focus_box_heading {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.History_content {
+    display: flex;
+    gap: 5rem; /* Adjusted gap for better responsiveness */
+    margin-top: 3rem;
+    align-items: center;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+}
+
+.Maharishi_image {
+    height: 45vh;
+    width: 20vw;
+}
+
+.About_Maharishi {
+    height: auto; /* Adjust height dynamically */
+    width: 70%; /* Reduce width for smaller screens */
+    text-align: justify; /* For better readability */
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .History_content {
+        gap: 3rem; /* Reduce gap for smaller screens */
+    }
+
+    .Maharishi_image {
+        height: 25vh;
+        width: 25vw; /* Scale image size */
+    }
+
+    .About_Maharishi {
+        width: 80%; /* Further reduce width */
+    }
+}
+
+@media (max-width: 768px) {
+    .History_content {
+        flex-direction: column; /* Stack items vertically */
+        gap: 2rem;
+    }
+
+    .Maharishi_image {
+        height: 20vh;
+        width: 40vw;
+
+    }
+
+    .About_Maharishi {
+        width: 90%; /* Almost full width */
+    }
+}
+
+@media (max-width: 576px) {
+    .Maharishi_image {
+        height: 20vh;
+        width: 60vw; /* Adjust for extra-small screens */
+    }
+
+    .About_Maharishi {
+        width: 95%;
+        font-size: 0.9rem; /* Reduce font size for readability */
+    }
+}

@@ -1,0 +1,22 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.preloader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: row;  
+  font-family: "Sanskrit 2003", serif;
+  gap: 10px;  
+  background-color: 	#075697;
+  color: white;
+}
+
+.preloader span {
+  display: inline-block;
+  padding: 10px 20px;
+  color: #b41818;
+}

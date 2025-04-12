@@ -1,0 +1,147 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-user-select: none; /* Safari/Chrome */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE/Edge */
+    user-select: none;
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    background-color: #2276a8 !important;
+    font-weight: 700;
+    padding: 0 5vw;
+    animation: slideright 1s ease-out;
+    height: 8vh;
+    margin-top: -0.5rem;
+}
+
+@keyframes slideright {
+    0% {
+        opacity: 0;
+        transform: translateX(-150px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.dropdown-menu {
+    background-color: rgb(210, 210, 255) !important;
+}
+
+.dropdown-item {
+    color: rgb(27, 25, 63);
+}
+
+.nav-link {
+    color: rgb(232, 232, 233) !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+    background-color: rgb(208, 208, 204);
+    color: rgb(3, 22, 70) ;
+    border-radius: 1rem;
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+    opacity: 1;
+    visibility: visible;
+}
+
+.nav-item.dropdown .nav-link:hover{
+    background-color: rgb(205, 206, 200);
+    color: rgb(3, 17, 84);
+}
+
+.dropdown-menu {
+    display: none;
+    transition: opacity 0.3s linear, visibility 0.3s linear;
+}
+
+/* iPad Pro Portrait (1024px height) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+    .navbar-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        padding: 15px;
+    }
+
+    .nav-link {
+        padding: 12px 0;
+        font-size: 18px;
+    }
+
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+    }
+}
+
+/* iPad Pro Landscape (1024px width) */
+@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+    .navbar-nav {
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 1rem 8vw;
+        height: 10vh;
+    }
+
+    .nav-link {
+        padding: 8px 0;
+        font-size: 16px;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+    }
+}
+
+/* General Tablet Support */
+@media (max-width: 992px) {
+    .navbar-nav {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-nav {
+        align-items: flex-start;
+    }
+
+    .nav-link {
+        padding: 10px 0;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-nav {
+        padding: 5px;
+    }
+
+    .nav-link {
+        font-size: 12px;
+    }
+}
+@media (min-width: 1024px) and (max-width: 1366px) {
+    .nav-link {
+        font-size: 15px;           /* Ensures readability on iPad Pro */
+        padding: 12px 10px;        /* Adequate clickable/tap area */
+        white-space: nowrap;       /* Prevents unwanted text wrapping */
+    }
+}

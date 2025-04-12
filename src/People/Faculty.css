@@ -1,0 +1,19 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.Faculty_member{
+    margin-top: 3rem;
+    text-align: center;
+}
+.Faculty_img{
+    display: flex;
+    align-items: center;
+    row-gap: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 20px;
+}

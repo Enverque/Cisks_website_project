@@ -1,0 +1,107 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.research-area {
+    padding: 4rem 0;
+    background-color: #f9fafb;
+}
+
+.research-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.research-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.research-main-title {
+    font-size: 2.5rem;
+    color: #1a365d;
+    margin-bottom: 1rem;
+}
+
+.research-intro {
+    font-size: 1.1rem;
+    color: #4a5568;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.research-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.strategy-card,
+.manpower-card,
+.achievements-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.research-list {
+    list-style: none;
+    padding: 0;
+}
+
+.research-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #edf2f7;
+    font-size: 1.1rem;
+    color: #4a5568;
+}
+
+.manpower-content {
+    line-height: 1.6;
+}
+
+.highlight {
+    display: inline-block;
+    font-weight: 600;
+    color: #2b6cb0;
+    margin: 0 0.25rem;
+}
+
+.progress-list {
+    padding-left: 1.5rem;
+}
+
+.progress-list li {
+    margin-bottom: 1rem;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.progress-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #48bb78;
+}
+
+@media (max-width: 768px) {
+    .research-main-title {
+        font-size: 2rem;
+    }
+    
+    .research-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,123 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    border: 3px solid blue;
+}/* Main container */
+.About_box.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Section titles */
+  .What_we_r,
+  .How_can_help {
+    color: #2276a8;
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+  }
+  
+  .What_we_r::after,
+  .How_can_help::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #2276a8;
+    margin: 10px auto 0;
+    border-radius: 2px;
+  }
+  
+  /* Flex layout for first section (image + text) */
+  .explaination_That_we_r {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+  
+  /* Image styling */
+  .Old_image {
+    flex: 1 1 300px;
+    max-width: 300px;
+    width: 80%;
+  
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    object-fit: cover;
+  }
+  
+  /* Paragraph styling */
+  .That_we_r,
+  .can_help {
+    flex: 2 1 600px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #333333;
+    text-align: justify;
+  }
+  
+  /* Links inside paragraph */
+  .That_we_r a,
+  .can_help a {
+    color: #d32f2f;
+    text-decoration: underline;
+  }
+  
+  .That_we_r a:hover,
+  .can_help a:hover {
+    color: #a10000;
+  }
+  
+  /* Extra spacing for the second section */
+  .How_can_help {
+    margin-top: 50px;
+  }
+  
+  /* Inner paragraphs and lists inside can_help */
+  .can_help p {
+    margin-bottom: 15px;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 992px) {
+    .explaination_That_we_r {
+      flex-direction: column;
+      align-items: center;
+      text-align: justify;
+    }
+  
+    .Old_image {
+      max-width: 300px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .About_box.container {
+      padding: 30px 15px;
+    }
+  
+    .What_we_r,
+    .How_can_help {
+      font-size: 1.5rem;
+    }
+  
+    .Old_image {
+      max-width: 250px;
+    }
+  
+    .That_we_r,
+    .can_help {
+      font-size: 1rem;
+    }
+  }
+  

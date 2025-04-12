@@ -1,0 +1,74 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.carousel {
+    max-width: 100%;
+    margin-top: 4rem;
+}
+
+.carousel-inner img {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    border-radius: 0.3rem 0.3rem 0 0;
+}
+
+.carousel-control-prev span, .carousel-control-next span{
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(255, 0, 0);
+}
+ .carousel-control-next-icon{
+    font-size: 18px;
+    font-weight: bold;
+    color: brown;
+    margin-right:  50px;
+}
+.carousel-control-prev-icon{
+    font-size: 18px;
+    font-weight: bold;
+    color: brown;
+    margin-left:  80px;
+}
+
+/* Extra Small Devices (Phones) */
+@media (max-width: 576px) {
+    .carousel-inner img {
+        max-height: 250px; /* Smaller height for mobile */
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        width: 10%;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Small Devices (Tablets) */
+@media (min-width: 577px) and (max-width: 768px) {
+    .carousel-inner img {
+        max-height: 350px;
+    }
+}
+
+/* Medium Devices (Laptops) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .carousel-inner img {
+        max-height: 450px;
+    }
+}
+
+/* Large Devices (Desktops) */
+@media (min-width: 1025px) {
+    .carousel-inner img {
+        max-height: 600px;
+    }
+}

@@ -1,0 +1,83 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 20vh;
+    background-color: rgb(255, 255, 255);
+    animation: slideIn 1s ease-out;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-150px); /* Starts slightly above */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); /* Final position */
+    }
+}
+
+.navbar-brand img {
+    height: 120px; /* Increased image size */
+    width: 110px; /* Increased image size */
+    border-radius: 0.2rem;
+}
+
+.middleheader {
+    font-weight: 1000;
+    font-family: cursive;
+    font-size: 35px;
+    text-align: center;
+}
+
+.middleheader a:hover {
+    color: yellow;
+}
+
+.IIT_logo {
+    height: 120px; /* Increased image size */
+    width: 110px; /* Increased image size */
+    border-radius: 0.2rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column; /* Stack items vertically */
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .middleheader {
+        font-size: 30px; /* Slightly reduce font size for smaller screens */
+    }
+
+    .navbar-brand img,
+    .IIT_logo {
+        height: 80px; /* Adjusted image size */
+        width: 80px;
+    }
+}
+
+@media (max-width: 576px) {
+    .middleheader {
+        font-size: 25px; /* Further reduce font size for extra-small screens */
+    }
+
+    .navbar-brand img,
+    .IIT_logo {
+        height: 100px; /* Adjusted image size for smaller screens */
+        width: 80px;
+    }
+}

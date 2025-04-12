@@ -1,0 +1,12 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.Internship{
+    text-align: center;
+    margin-top: 3rem; 
+}
+.Internship h4{
+    margin-top: 2rem;
+}

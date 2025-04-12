@@ -1,0 +1,70 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.staff-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 20px;
+    max-width: 1400px; /* Ensures three cards fit in a row */
+    margin: 0 auto;
+}
+
+.staff-box {
+    width: 450px; /* Keeping original size */
+    text-align: center;
+    margin-top: 2rem;
+}
+.staff-box h2{
+    margin-left: -3rem;
+} 
+
+.staff-box img {
+    width: 140px; /* Fixed size */
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Media Queries */
+@media (max-width: 1300px) {
+    .staff-container {
+        max-width: 1200px;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .staff-container {
+        max-width: 900px;
+    }
+    .staff-box {
+        width: 400px; /* Keeps size consistent */
+    }
+}
+
+@media (max-width: 900px) {
+    .staff-container {
+        max-width: 800px;
+    }
+    .staff-box {
+        width: 100%; /* Two cards per row */
+    }
+}
+
+@media (max-width: 600px) {
+    .staff-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .staff-box {
+        width: 100%; /* Single column layout */
+        max-width: 400px;
+    }
+}

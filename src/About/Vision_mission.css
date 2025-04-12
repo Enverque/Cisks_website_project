@@ -1,0 +1,144 @@
+/* Reset and base setup */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  
+  /* Container Box */
+  .mission_box {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 40px 30px;
+    background: #ffffff;
+    color: #333;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Heading */
+  .heading_Mission {
+    text-align: center;
+    font-size: 2rem;
+    color: #2276a8;
+    margin-top: 5rem ;
+    position: relative;
+  }
+  
+  .heading_Mission::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: #2276a8;
+    margin: 10px auto 0;
+    border-radius: 2px;
+  }
+  
+  /* Mission Motive */
+  .Mission_motive {
+    text-align: start;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #444;
+  }
+  
+  .mission_meaning {
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+    color: #555;
+  }
+  
+  /* Flex layout for image + description */
+  .explaination_What_is_sankrit {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: center;
+    margin-top: 2rem;
+  }
+  
+  /* Title for Section */
+  .What_is_sankrit {
+    color: #24751f; /* A rich green color */
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  /* Text container */
+  .That_is_Sanksrit {
+    flex: 1 1 500px;
+    font-size: 1.05rem;
+    color: #444;
+    text-align: justify;
+  }
+  
+  /* Image styling */
+  .Vision_image {
+    flex: 1 1 400px;
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    object-fit: cover;
+  }
+  
+  /* Responsive media queries */
+  @media (max-width: 992px) {
+    .heading_Mission {
+      font-size: 1.75rem;
+    }
+  
+    .explaination_What_is_sankrit {
+      flex-direction: column;
+    }
+  
+    .That_is_Sanksrit,
+    .Vision_image {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .heading_Mission {
+      font-size: 1.5rem;
+    }
+  
+    .What_is_sankrit {
+      font-size: 1.4rem;
+    }
+  
+    .Mission_motive {
+      font-size: 1.1rem;
+    }
+  
+    .mission_box {
+      padding: 30px 20px;
+      margin: 40px 15px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .heading_Mission {
+      font-size: 1.3rem;
+    }
+  
+    .What_is_sankrit {
+      font-size: 1.2rem;
+    }
+  
+    .That_is_Sanksrit {
+      font-size: 1rem;
+      padding: 10px;
+    }
+  
+    .Vision_image {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  

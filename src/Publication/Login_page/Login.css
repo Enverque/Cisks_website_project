@@ -1,0 +1,105 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.login h2 {
+    margin-top: 3rem;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.Userdetail, .Userpassword {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.login-btn{
+    width: 100%;
+    padding: 10px;
+    background-color: #6a11cb;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 1rem;
+}
+.Register-btn a{
+    width: 100%;
+    padding: 10px;
+    background-color: #6a11cb;
+    color: rgb(111, 255, 0);
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-btn:hover , .Register-btn:hover {
+    background-color: #4a0ca3;
+}
+
+.forgot-password {
+    display: block;
+    margin-top: 10px;
+    color: #6a11cb;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password:hover , .Register:hover {
+    text-decoration: underline;
+}
+
+
+@media (max-width: 768px) {
+    .login {
+        width: 90%;
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login {
+        width: 90%;
+        max-width: 300px;
+        padding: 15px;
+    }
+
+    .login h2 {
+        font-size: 20px;
+    }
+
+    input {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .login-btn , .Register-btn {
+        font-size: 16px;
+    }
+
+    .forgot-password {
+        font-size: 12px;
+    }
+}

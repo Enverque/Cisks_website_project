@@ -1,0 +1,45 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.Latest_progUp_slider {
+    position: relative;
+    width: 100%; 
+    height: 50px;
+    overflow: hidden;
+    background: #1c9ea2;
+
+}
+.Latest_progUp_center {
+    position: relative;
+    width: 100%;
+}
+.Latest_progUp_box {
+    position: absolute;
+    color: white;
+    align-content: center;
+    padding: 5px 0;
+    font-size: 17px;
+    animation: slideBook 20s infinite linear;
+    width: 100%;
+    white-space: nowrap;
+}
+.Latest_progUp_box:hover {
+    animation-play-state: paused;
+}
+@keyframes slideBook {
+    0% {
+        transform: translateX(-100%); /* Start just off the screen to the left */
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(0); /* Move to the center */
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%); /* Move completely off the screen to the right */
+        opacity: 1;
+    }
+}
+

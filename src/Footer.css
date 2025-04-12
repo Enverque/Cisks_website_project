@@ -1,0 +1,129 @@
+/* Footer.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.footer {
+    background: linear-gradient(270deg, #20392d, #2d6b72, #234986);
+    background-size: 400% 400%;
+    animation: GradientBackground 10s ease infinite;
+    padding: 2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    margin-top: 15rem;
+}
+
+@keyframes GradientBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.Upper_bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding-bottom: 2rem;
+}
+
+.about-container, .Office, .Social_media, .map-container {
+    flex: 1 1 250px;
+    max-width: 300px;
+    text-align: left;
+}
+.CISKS_logo{
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+}
+
+.about-container h2, .Office h3, .Social_media h3, .map-container h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: rgb(247, 255, 7);
+}
+
+.about-container p, .Office p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #ddd;
+}
+.about-container h2:hover, .Office h3:hover, .Social_media h3:hover, .map-container h3:hover {
+    text-decoration: underline;
+}
+
+.Social_media {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    
+}
+
+.Social_media a img {
+    width: 50px;
+    height: 50px;
+    object-fit:cover;
+    transition: transform 0.3s ease;
+    margin-left: 2rem;
+}
+
+.Social_media a img:hover {
+    transform: scale(1.1);
+}
+
+.map-iframe {
+    width: 100%;
+    max-width: 280px;
+    height: 200px;
+    border: none;
+    border-radius: 8px;
+}
+
+.Lower_bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.Top_btn button {
+    background: rgb(155, 2, 140);
+    border: 1px solid white;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.Top_btn button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 1024px) {
+    .Upper_bottom {
+        justify-content: center;
+    }
+    .about-container, .Office, .Social_media, .map-container {
+        text-align: center;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .Upper_bottom {
+        flex-direction: column;
+        align-items: center;
+    }
+    .Social_media {
+        flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
+    }
+}
