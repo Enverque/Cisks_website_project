@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from "express";
 import path from "path";
 import bcrypt from "bcryptjs";
@@ -16,7 +18,8 @@ import issueBookRouter from './routes/issueBook.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const JWT_SECRET = "yourSuperSecretKey";
+const JWT_SECRET = process.env.JWT_SECRET; 
+
 const app = express();
 const Port = process.env.PORT || 3000;
 
@@ -24,11 +27,11 @@ const Port = process.env.PORT || 3000;
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'ciskslibrary@iiti.ac.in',
-    pass: 'fdupbakyzrjnloky',
+    user: process.env.VITE_EMAIL_USER,  // Use process.env to access environment variables
+    pass: process.env.VITE_EMAIL_PASS,
   },
   logger: true,
-  debug: process.env.NODE_ENV !== 'production'
+  debug: process.env.VITE_NODE_ENV !== 'production' 
 });
 
 // Middleware setup
@@ -414,3 +417,4 @@ app.get("*", (req, res) => {
 app.listen(Port, () => {
   console.log(`Server running on port ${Port}`);
 });
+
