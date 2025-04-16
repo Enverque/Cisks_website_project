@@ -9,6 +9,7 @@ const slidesData = [
     { img: "/Events_img/img4.png", text: "Gold medal awarded to Sayali Vikhrankar for Sanskrit excellence." },
     { img: "/Events_img/img5.png", text: "Apurva Kamble wins logo design competition at CISKS, IIT Indore." },
     { img: "/Events_img/img6.png", text: "Centre for learning sanskrit at CISKS, IIT Indore - 3 years of excellence." },
+    { img: "/Gallery/img12.jpg",   text: "The Sanskrit Sambhāṣaṇa Śivira event encouraged participants to engage with the language in a fun and practical way, fostering a deeper appreciation for our cultural heritage."}
 ];
 
 function Updated_News() {

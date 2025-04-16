@@ -38,7 +38,7 @@ function Footer() {
 
                 <div className="Lower_bottom">
                     <p>&copy;2021 Center for Indian Scientific Knowledge Systems, IIT Indore</p>
-                    <p>Designed and Developed By Himanshu Verma</p>
+                    <p>Designed and Developed By Himanshu Verma(15 April 2025 )</p>
                     <a href="#Navbar_brand" className="Top_btn"> <button>Top</button></a>
                 </div>
             </div>

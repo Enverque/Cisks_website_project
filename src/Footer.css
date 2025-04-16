@@ -127,3 +127,11 @@
         gap: 1rem;
     }
 }
+@media (max-width: 468px) {
+    .Social_media {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1rem;
+    }
+}

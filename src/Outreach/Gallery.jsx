@@ -32,6 +32,14 @@ function Gallery() {
           </div>
           <div className="item" style={{backgroundImage: 'url(/Gallery/img11.jpg)' }}>
           </div>
+          <div className="item" style={{backgroundImage: 'url(/Gallery/img12.jpg)' }}>
+          </div>
+          <div className="item" style={{backgroundImage: 'url(/Gallery/img13.jpg)' }}>
+          </div>
+          <div className="item" style={{backgroundImage: 'url(/Gallery/img14.jpg)' }}>
+          </div>
+          <div className="item" style={{backgroundImage: 'url(/Gallery/img15.jpg)' }}>
+          </div>
         </div>
 
       </div>

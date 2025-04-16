@@ -14,19 +14,8 @@ a {
     justify-content: space-evenly;
     height: 20vh;
     background-color: rgb(255, 255, 255);
-    animation: slideIn 1s ease-out;
 }
 
-@keyframes slideIn {
-    0% {
-        opacity: 0;
-        transform: translateY(-150px); /* Starts slightly above */
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0); /* Final position */
-    }
-}
 
 .navbar-brand img {
     height: 120px; /* Increased image size */

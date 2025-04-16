@@ -8,30 +8,32 @@ import { fileURLToPath } from "url";
 import "./Database/connection.js";
 import Books_collection from './models/Books_collection.js';
 import Students from "./models/Reg_students.js";
-import IssueModel  from "./models/issue.js";
+import IssueModel from "./models/issue.js";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
-import cron from "node-cron";
-import nodemailer from 'nodemailer';  // Changed from emailjs
+import nodemailer from 'nodemailer';
 import issueBookRouter from './routes/issueBook.js';
+import cron from 'node-cron'; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const JWT_SECRET = process.env.JWT_SECRET; 
+const JWT_SECRET = process.env.JWT_SECRET;
+const API_KEY = process.env.API_KEY;
 
 const app = express();
 const Port = process.env.PORT || 3000;
 
-// Nodemailer configuration
+// Updated Nodemailer configuration
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.VITE_EMAIL_USER,  // Use process.env to access environment variables
-    pass: process.env.VITE_EMAIL_PASS,
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   },
-  logger: true,
-  debug: process.env.VITE_NODE_ENV !== 'production' 
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 10
 });
 
 // Middleware setup
@@ -47,14 +49,101 @@ app.use(cors({
   credentials: true
 }));
 
+// Function to check due books and send reminders
+async function checkDueBooks() {
+  console.log('[CRON] Checking due books...');
+  const now = new Date();
+  
+  try {
+    const students = await Students.aggregate([
+      { $unwind: "$issuedBooks" },
+      {
+        $match: {
+          "issuedBooks.returned": false,
+          "issuedBooks.reminderSent": false,
+          "issuedBooks.dueDate": {
+            $lte: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000), // Books due within next minute
+            $gt: now // But not overdue yet
+          }
+        }
+      },
+      { 
+        $group: { 
+          _id: "$_id", 
+          issuedBooks: { $push: "$issuedBooks" }, 
+          email: { $first: "$username" },
+          name: { $first: "$name" } 
+        }
+      }
+    ]);
 
-// Temporary storage for OTPs (Consider using a database in production)
-const otpStore = {}; 
+    console.log(`[CRON] Found ${students.length} students with due books`);
 
-// Generate a random 4-digit OTP
+    let sentCount = 0;
+    for (const student of students) {
+      for (const book of student.issuedBooks) {
+        const timeRemaining = book.dueDate - now;
+        const daysRemaining = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        const hoursRemaining = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));        
+        const mailOptions = {
+          from: `CISKS Library <${process.env.EMAIL_USER}>`,
+          to: student.email,
+          subject: 'Book Due Date Reminder',
+          html: `
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+              <div>Hi ${student.name},</div> 
+              <p>This is a reminder that your book <strong>"${book.Book_title}"</strong> is due soon:</p>
+              <ul>
+                <li><strong>Due Date:</strong> ${new Date(book.dueDate).toLocaleString()}</li>
+                <li><strong>Time Remaining:</strong> ${daysRemaining} days and ${hoursRemaining} hours</li>              
+              </ul>
+              <p>Please return or renew the book before the due date to avoid penalties.</p>
+              <p style="margin-top: 30px; color: #666;">
+                Best regards,<br>
+                CISKS Library Team
+              </p>
+            </div>
+          `
+        };
+
+        try {
+          await transporter.sendMail(mailOptions);
+          console.log(`[CRON] Reminder sent to ${student.email} for book "${book.Book_title}"`);
+
+          await Students.updateOne(
+            { _id: student._id, "issuedBooks.bookId": book.bookId },
+            { $set: { "issuedBooks.$.reminderSent": true } }
+          );
+          
+          sentCount++;
+        } catch (emailError) {
+          console.error(`[CRON] Failed to send reminder to ${student.email}:`, emailError);
+        }
+      }
+    }
+    
+    console.log(`[CRON] Sent ${sentCount} reminders in total`);
+    return { success: true, remindersSent: sentCount };
+  } catch (error) {
+    console.error("[CRON] Error checking due books:", error);
+    return { error: "Internal server error", details: error.message };
+  }
+}
+
+// Schedule the cron job to run every minute
+cron.schedule('* * * * *', async () => {
+  try {
+    console.log('[CRON] Running scheduled due date check...');
+    const result = await checkDueBooks();
+    console.log('[CRON] Check completed:', result);
+  } catch (error) {
+    console.error('[CRON] Scheduled check error:', error);
+  }
+});
+
+const otpStore = {};
 const generateOTP = () => Math.floor(1000 + Math.random() * 9000);
 
-// Send OTP via Nodemailer
 app.post("/api/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
@@ -64,7 +153,7 @@ app.post("/api/send-otp", async (req, res) => {
     otpStore[email] = otp;
 
     const mailOptions = {
-      from: "CISKS Library <cisks@iiti.ac.in>",
+      from: `CISKS Library <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Your OTP Code",
       text: `Your OTP for password reset is: ${otp}`,
@@ -97,7 +186,22 @@ app.post("/api/verify-otp", (req, res) => {
   }
 });
 
-// ✅ GET Books Collection
+// API endpoint for manual check of due books
+app.get('/api/check-due-books', async (req, res) => {
+  try {
+    // Verify API Key for external requests
+    if (req.headers['x-api-key'] !== API_KEY && !req.hostname.includes('localhost')) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    const result = await checkDueBooks();
+    res.json(result);
+  } catch (error) {
+    console.error("Manual check error:", error);
+    res.status(500).json({ error: "Server error during check" });
+  }
+});
+
 app.get("/api/Books_collection", async (req, res) => {
   try {
     const books = await Books_collection.find();
@@ -108,7 +212,6 @@ app.get("/api/Books_collection", async (req, res) => {
   }
 });
 
-// ✅ Register Route
 app.post("/api/Register", async (req, res) => {
   try {
     const { name, username, password } = req.body;
@@ -127,7 +230,6 @@ app.post("/api/Register", async (req, res) => {
   }
 });
 
-// ✅ Login Route
 app.post("/api/Login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -137,11 +239,9 @@ app.post("/api/Login", async (req, res) => {
     const user = await Students.findOne({ username: trimmedUsername });
     if (!user) return res.status(404).send("User not found. Please register first.");
 
-    // Compare entered password with hashed password in DB
     const isMatch = await bcrypt.compare(trimmedPassword, user.password);
     if (!isMatch) return res.status(401).send("Incorrect password");
 
-    // Generate token
     const token = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, { expiresIn: "30d" });
 
     res.cookie("token", token, {
@@ -158,66 +258,54 @@ app.post("/api/Login", async (req, res) => {
   }
 });
 
-
-
-// ✅ Issue Book Route (with dueDate and returned)
-// ✅ Corrected Issue Book Route
 app.post('/api/issueBook', async (req, res) => {
   try {
     const { userId, bookId } = req.body;
 
-    // Validation
     if (!userId || !bookId) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Parallel database lookups
     const [student, book] = await Promise.all([
       Students.findById(userId),
       Books_collection.findById(bookId)
     ]);
 
-    // Error handling
     if (!student) return res.status(404).json({ error: 'User not found' });
     if (!book) return res.status(404).json({ error: 'Book not found' });
     if (book.Quantity <= 0) return res.status(400).json({ error: 'Book out of stock' });
 
-    // Check existing issues
     const hasBook = student.issuedBooks.some(b => 
       b.bookId.toString() === bookId && !b.returned
     );
     if (hasBook) return res.status(400).json({ error: 'Book already issued' });
 
-    // Date calculations
     const issueDate = new Date();
-    const dueDate = new Date(issueDate.getTime() + 1 * 24 * 60 * 60 * 1000); // 1 days
+    const dueDate = new Date(issueDate.getTime() + 10 * 24 * 60 * 60 * 1000); // 10 din 
 
-    // Create book data for Students collection
     const bookData = {
       bookId: book._id,
       Book_title: book.Book_title,
       Author: book.Author,
       Category: book.Category,
       issueDate: issueDate,
-
       dueDate: dueDate,
       returned: false,
+      reminderSent: false,
       status: "issued"
     };
 
-    // Create data for IssuedBooks collection
     const newIssuedBook = new IssueModel({
       userName: student.name,
-      userId: student._id,       // Use ObjectId
-      bookId: book._id,          // Use ObjectId
+      userId: student._id,
+      bookId: book._id,
       title: book.Book_title,
       author: book.Author,
-      Category: book.Category,   // Now matches array type
+      Category: book.Category,
       issueDate: issueDate,
-      dueDate: dueDate,          // Add dueDate
+      dueDate: dueDate,
     });
 
-    // Perform all database updates
     await Promise.all([
       Books_collection.findByIdAndUpdate(bookId, { $inc: { Quantity: -1 } }),
       Students.findByIdAndUpdate(userId, { $push: { issuedBooks: bookData } }),
@@ -242,13 +330,10 @@ app.post('/api/issueBook', async (req, res) => {
   }
 });
 
-// ✅ Return Book Route
-// ✅ Return Book Route
 app.post('/api/returnBook', async (req, res) => {
   try {
     const { userId, bookId } = req.body;
     
-    // Update user's book status
     const user = await Students.findByIdAndUpdate(
       userId,
       {
@@ -263,13 +348,11 @@ app.post('/api/returnBook', async (req, res) => {
       }
     );
 
-    // Update book quantity
     await Books_collection.findByIdAndUpdate(
       bookId,
       { $inc: { Quantity: 1 } }
     );
 
-    // Remove the returned book from the issuedBooks collection
     await IssueModel.findOneAndDelete({ userId, bookId });
 
     res.status(200).json({
@@ -282,8 +365,6 @@ app.post('/api/returnBook', async (req, res) => {
   }
 });
 
-
-// ✅ Auth Check Route
 app.get('/api/check-auth', async (req, res) => {
   try {
     const token = req.cookies.token;
@@ -308,7 +389,6 @@ app.get('/api/check-auth', async (req, res) => {
   }
 });
 
-// ✅ Get User's Issued Books Route
 app.get('/api/user/:userId/books', async (req, res) => {
   try {
     const user = await Students.findById(req.params.userId)
@@ -323,7 +403,6 @@ app.get('/api/user/:userId/books', async (req, res) => {
   }
 });
 
-// ✅ Logout Route
 app.post("/api/Logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
@@ -333,10 +412,6 @@ app.post("/api/Logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
-
-
-
-// Updated Reset Password Route
 app.post("/api/reset-password", async (req, res) => {
   try {
     const { email, newPassword } = req.body;
@@ -345,11 +420,9 @@ app.post("/api/reset-password", async (req, res) => {
       return res.status(400).json({ error: "All fields required" });
     }
 
-    // Find user by email (assuming username is email)
     const user = await Students.findOne({ username: email });
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Hash and update password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await Students.findByIdAndUpdate(user._id, { password: hashedPassword });
 
@@ -360,61 +433,11 @@ app.post("/api/reset-password", async (req, res) => {
   }
 });
 
-
-
-
-
-
-// ✅ Cron Job  for Sending Emails Every 2min (Updated with Nodemailer)
-cron.schedule('*/2 * * * *', async () => {
-  console.log('Checking for due books...');
-  const today = new Date();
-
-  try {
-    const students = await Students.find({ "issuedBooks.0": { $exists: true } });
-
-    for (const student of students) {
-      for (const book of student.issuedBooks) {
-        if (!book.returned && book.dueDate <= today) {
-          const mailOptions = {
-            from: `CISKS Library System <${process.env.EMAIL_USER}>`,
-            to: student.username, // Changed to use email field instead of username
-            subject: 'Book Return Reminder',
-            text: `Hi ${student.name},\n\nThis is a reminder to return the book "${book.Book_title}".\nIt was due on ${new Date(book.dueDate).toLocaleDateString('en-GB')}.\n\nPlease return it at your earliest convenience.\n\nThank you!\nRegards CISKS Team`,
-            html: `
-              <div style="font-family: Arial, sans-serif; padding: 20px;">
-                <h3 style="color: #2c3e50;">Book Return Reminder</h3>
-                <p>Hi ${student.name},</p>
-                <p>This is a reminder to return the book <strong>"${book.Book_title}"</strong>.</p>
-                <p>It is due on ${new Date(book.dueDate).toLocaleDateString('en-GB')}.</p>
-                <p>Please return it at your earliest convenience. If you returned then ignore it.</p>
-                <p style="margin-top: 30px;">Thank you!</p>
-                <p>Regards CISKS Team </p>
-              </div>
-            `
-          };
-
-          try {
-            await transporter.sendMail(mailOptions);
-            console.log(`Reminder email sent to ${student.username} for book "${book.Book_title}"`);
-          } catch (emailError) {
-            console.error(`Failed to send reminder to ${student.username}:`, emailError);
-          }
-        }
-      }
-    }
-  } catch (error) {
-    console.error("Error in cron job:", error);
-  }
-});
-
-// Serve React App
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
-// Start Server
 app.listen(Port, () => {
   console.log(`Server running on port ${Port}`);
+  console.log(`Cron job scheduled to check due books every minute`);
 });
-

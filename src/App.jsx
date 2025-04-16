@@ -39,7 +39,7 @@ function App() {
       setTimeout(() => {
         setLoading(false);
         sessionStorage.setItem("preloaderShown", "true");
-      }, 5000); // Show preloader for 2s
+      }, 2500); // Show preloader for 2.5s
     }
   }, []);
 

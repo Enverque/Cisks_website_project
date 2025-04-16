@@ -2,8 +2,8 @@ import express from 'express';
 import Books_collection from "../models/Books_collection.js";
 import Students from '../models/Reg_students.js';
 import IssueModel from "../models/issue.js"; 
-
 import nodemailer from 'nodemailer';
+
 
 const router = express.Router();
 
@@ -11,11 +11,11 @@ const router = express.Router();
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
+  user: process.env.EMAIL_USER,  // Match main.js variables
+  pass: process.env.EMAIL_PASS
+},
   logger: true,
-  debug: process.env.NODE_ENV !== 'production'
+  debug: true,
 });
 
 // ✅ Enhanced Issue Book Route with Auto-Email
@@ -49,8 +49,7 @@ router.post('/issueBook', async (req, res) => {
 
     // Create issue record
     const issueDate = new Date();
-    const dueDate = new Date(issueDate.getTime() +  1 * 24 * 60 * 60 * 1000); // 1 days 
-
+    const dueDate = new Date(issueDate.getTime() + 10 * 24 * 60 * 60 * 1000); // 10din
     const issuedBook = {
       bookId: book._id,
       Book_title: book.Book_title,
@@ -58,54 +57,13 @@ router.post('/issueBook', async (req, res) => {
       Category: book.Category, 
       issueDate: issueDate,
       dueDate:dueDate,
-      returnDate: Date,
+      returnDate: null,
       returned: false,
       reminderSent: false,
       status: "issued"
     };
 
-    // Schedule reminder email
-    setTimeout(async () => {
-      try {
-        const freshUser = await Students.findById(userId);
-        
-        const mailOptions = {
-          from: `Library System <${process.env.EMAIL_USER}>`,
-          to: freshUser.email,
-          subject: 'Book Return Reminder',
-          text: `Hello ${freshUser.name},\n\nThis is a reminder that you issued the book "${book.Book_title}".\nPlease return it by ${dueDate}.\n\nThank you!`,
-          html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px;">
-              <h3 style="color: #2c3e50;">Book Return Reminder</h3>
-              <p>Hello ${freshUser.name},</p>
-              <p>This is a reminder that you issued:</p>
-              <ul>
-                <li><strong>Book:</strong> ${book.Book_title}</li>
-                <li><strong>Author:</strong> ${book.Author}</li>
-                <li><strong>Issued At:</strong> ${issueDate}</li>
-                <li><strong>Due Date:</strong> ${dueDate}</li>
-              </ul>
-              <p>Please return the book before the due date to avoid penalties.</p>
-              <p style="margin-top: 30px; color: #666;">
-                Best regards,<br>
-                Library Management System
-              </p>
-            </div>
-          `
-        };
 
-        await transporter.sendMail(mailOptions);
-        console.log(`Reminder sent to ${freshUser.email}`);
-        
-        // Update reminder status in database
-        await Students.updateOne(
-          { _id: userId, "issuedBooks.bookId": book._id },
-          { $set: { "issuedBooks.$.reminderSent": true } }
-        );
-      } catch (emailError) {
-        console.error('Error sending reminder:', emailError);
-      }
-    }, 60 * 6000); // 1 min
     // Update database
     const [updatedStudent, updatedBook] = await Promise.all([
       Students.findByIdAndUpdate(
@@ -129,8 +87,8 @@ router.post('/issueBook', async (req, res) => {
       message: 'Book issued successfully',
       issuedBook: {
         ...issuedBook,
-        issueDate: issueDate.toISOString('en-GB'),
-        dueDate: dueDate.toISOString('en-GB')
+        issueDate: issueDate.toISOString(), // Standard format
+        dueDate: dueDate.toISOString()
       },
       user: updatedStudent,
       book: updatedBook

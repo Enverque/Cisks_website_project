@@ -17,28 +17,20 @@
     background-color: #2276a8 !important;
     font-weight: 700;
     padding: 0 5vw;
-    animation: slideright 1s ease-out;
     height: 8vh;
     margin-top: -0.5rem;
 }
 
-@keyframes slideright {
-    0% {
-        opacity: 0;
-        transform: translateX(-150px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
 .dropdown-menu {
-    background-color: rgb(210, 210, 255) !important;
+    background-color: rgb(166, 218, 221) !important;
+    border-radius: 1rem;
+    color: rgb(4, 38, 93);
+    font-weight: 600;
 }
-
 .dropdown-item {
     color: rgb(27, 25, 63);
+    transition: opacity 0.3s linear, visibility 0.3s linear;
+    border-radius: 0.6rem;
 }
 
 .nav-link {
@@ -47,8 +39,8 @@
 }
 
 .nav-link:hover {
-    background-color: rgb(208, 208, 204);
-    color: rgb(3, 22, 70) ;
+    background-color: rgba(218, 218, 216, 0.865) !important;
+    color:white !important;
     border-radius: 1rem;
 }
 
@@ -60,7 +52,7 @@
 }
 
 .nav-item.dropdown .nav-link:hover{
-    background-color: rgb(205, 206, 200);
+    background-color: rgb(24, 125, 2);
     color: rgb(3, 17, 84);
 }
 
