@@ -1,0 +1,31 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.Top_btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    transform: translateY(-400px); /* Start slightly above */
+    opacity: 0;                   /* Start hidden */
+    pointer-events: none;         /* Prevent interaction when hidden */
+}
+
+.Top_btn.visible {
+    transform: translateY(0);     /* Slide into place */
+    opacity: 1;                   /* Become visible */
+    pointer-events: auto;         /* Enable interaction */
+}
+
+.Top_btn button {
+    background: rgb(66, 157, 203);
+    border: 1px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+

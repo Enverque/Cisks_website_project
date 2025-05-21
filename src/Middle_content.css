@@ -15,23 +15,90 @@
     -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
     mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
     border-radius: 0.3rem 0.3rem 0 0;
+    opacity: 0.5;
 }
 
 .carousel-control-prev span, .carousel-control-next span{
     font-size: 18px;
     font-weight: bold;
-    color: rgb(255, 0, 0);
+    color: rgb(75, 0, 203);
 }
+.carousel-item {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Default image style for all items (full opacity) */
+  .carousel-item img {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  /* First item image starts dim, then fades in after 3s */
+  .carousel-item:first-child img {
+    opacity: 0.4;
+    animation: showImage 1s ease-in-out 3s forwards;
+  }
+  
+  /* Only first image shows welcome text */
+  .carousel-item:first-child::after {
+    content: "WELCOME TO CISKS";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
+    font-weight: bold;
+    color: rgb(220, 79, 223);
+    white-space: nowrap;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    z-index: 2;
+    overflow: hidden;
+    border-right: 0.15em solid rgb(132, 190, 205);
+    animation:
+      typing 3s steps(18, end),
+      blink-caret 0.75s step-end infinite,
+      fadeOutText 0.5s ease-out 3s forwards;
+    pointer-events: none;
+  }
+  
+  /* Remove ::after for all other slides */
+  .carousel-item:not(:first-child)::after {
+    content: none;
+  }
+  
+  /* Typing animation */
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 18ch }
+  }
+  
+  /* Blinking caret animation */
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: rgb(132, 190, 205); }
+  }
+  
+  /* Fade out welcome text */
+  @keyframes fadeOutText {
+    to { opacity: 0; }
+  }
+  
+  /* Fade in image for first slide */
+  @keyframes showImage {
+    to { opacity: 1; }
+  }
+  
  .carousel-control-next-icon{
     font-size: 18px;
     font-weight: bold;
-    color: brown;
+    color: rgb(75, 0, 203);
     margin-right:  50px;
 }
 .carousel-control-prev-icon{
     font-size: 18px;
     font-weight: bold;
-    color: brown;
+    color: rgb(75, 0, 203);
     margin-left:  80px;
 }
 

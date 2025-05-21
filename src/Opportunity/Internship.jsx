@@ -8,7 +8,7 @@ function Internship() {
         <>
             <div className="Internship">
                 <h2>Coming Soon</h2>
-                <h4>For More Information Contact: head-cisk [at] iiti.ac.in</h4>
+                <h4>For More Information Contact: head-cisks [at] iiti.ac.in</h4>
             </div>
         </>
     )

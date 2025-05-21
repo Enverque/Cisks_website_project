@@ -11,7 +11,8 @@
   flex-direction: row;  
   font-family: "Sanskrit 2003", serif;
   gap: 10px;  
-  background-color: 	#075697;
+  background-image: url("/Home_img/image.png");
+  background-position: center;
   color: white;
 }
 

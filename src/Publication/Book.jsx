@@ -4,8 +4,6 @@ import "./Book.css";
 import Library_book from "./Library_book";
 import Book_slider from "./Book_slider";
 import { toast } from 'react-toastify';
-import AOS from "aos";
-import "aos/dist/aos.css";
 
 
 
@@ -18,14 +16,8 @@ function Book() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: false,
-      mirror: true,
-    });
-  }, []);
 
+  
   // Fetch issued books from backend
   const fetchIssuedBooks = async () => {
     const userId = localStorage.getItem("userId");
@@ -280,14 +272,13 @@ const refreshIssuedBooks = async () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Enter the Book/Author Name for search"
-              data-aos="fade" data-aos-delay="400"
             />
-            <button className="searchbtn" data-aos="fade" data-aos-delay="400"  onClick={handleSearch}>
+            <button className="searchbtn" onClick={handleSearch}>
               <strong>Search</strong>
             </button>
           </div>
 
-        <div className="searchCategory" data-aos="fade" data-aos-delay="600">
+        <div className="searchCategory" >
           <select value={searchCategory} onChange={(err) => setSearchCategory(err.target.value)}>
             <option value="" disabled>Select a Category</option>
             <option value="1">Category 1</option>
@@ -310,13 +301,13 @@ const refreshIssuedBooks = async () => {
           </select>
         </div>
 
-        <div className="User" data-aos="fade" data-aos-delay="800">
+        <div className="User">
           {localStorage.getItem("userLoggedIn") ? (
-            <NavLink onClick={handleLogout} data-aos="fade" data-aos-delay="800">Logout</NavLink>
+            <NavLink onClick={handleLogout}>Logout</NavLink>
           ) : (
-            <NavLink to="/Login" data-aos="fade" data-aos-delay="800">Login</NavLink>
+            <NavLink to="/Login">Login</NavLink>
           )}
-          <NavLink to="/My_profile" data-aos="fade" data-aos-delay="800">
+          <NavLink to="/My_profile">
             Profile
           </NavLink>
         </div>
@@ -375,7 +366,7 @@ const refreshIssuedBooks = async () => {
       </div>
 
       <div className="middlepart container">
-        <div className="content" data-aos="fade" data-aos-delay="1000">
+        <div className="content"  data-aos-delay="1000">
           <h1>CISKS library</h1>
           <p className="about_library">
               Welcome to the CISKS Library, a comprehensive knowledge hub designed 
@@ -383,7 +374,7 @@ const refreshIssuedBooks = async () => {
               access to a vast collection of physical resources to enhance learning.
           </p>
         </div>
-        <img src="/Book_img/Book.png" data-aos="fade" data-aos-delay="1100" alt="Book img" />
+        <img src="/Book_img/Book.png"  data-aos-delay="1100" alt="Book img" />
       </div>
 
       <Library_book />

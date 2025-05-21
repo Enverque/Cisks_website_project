@@ -88,18 +88,12 @@ function Forget_password() {
 
     return (
         <div className="Forget_password">
-            <div className="back-button-container">
-                <button 
-                    className="back-button"
-                    onClick={() => window.history.back()}
-                    aria-label="Go back"
-                >
-                    Back
-                </button>
-            </div>
-            
             <h2>Password Reset</h2>
-
+            {!otpSent && (
+                <p className="instructions">
+                    Enter your registered email address. We'll send you an OTP to reset your password.
+                </p>
+            )}
             {!otpSent ? (
                 <>
                     <input
@@ -154,11 +148,7 @@ function Forget_password() {
                 <Link to="/Login">Back to Login</Link>
             </p>
             
-            {!otpSent && (
-                <p className="instructions">
-                    Enter your registered email address. We'll send you an OTP to reset your password.
-                </p>
-            )}
+        
         </div>
     );
 }

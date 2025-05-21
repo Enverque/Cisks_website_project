@@ -1,0 +1,49 @@
+/* Basic reset and styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    height: 100%;
+    width: 100%;
+  }
+  
+  /* Full-screen container for letters */
+  .cursor-container {
+    position: fixed; /* Use fixed positioning */
+    top: 0;
+    left: 0;
+    width: 100%; /* Covers the entire width of the page */
+    height: 100%; /* Covers the entire height of the page */
+    pointer-events: none; /* Ensure it doesn't interfere with other elements */
+    z-index: 9999; /* Ensure it's on top of all other elements */
+  }
+  
+  /* Style for each Sanskrit letter */
+  .cursor-letter {
+    position: absolute;
+    font-size: 14px; /* Increased font size for better visibility */
+    color: #fff6fb; /* Gold/yellow color */
+    animation: fade 1s ease-out forwards;
+    pointer-events: none; /* Prevent letter from interfering with mouse events */
+  }
+  
+  /* Animation for the letter (scale and fade out) */
+  @keyframes fade {
+    0% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2); /* Scale up the letter to make it stand out */
+    }
+  }
+  
+  /* Optional: Add a shadow to make the letters stand out */
+  .cursor-letter {
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  }
+  

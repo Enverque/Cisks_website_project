@@ -1,11 +1,16 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-mongoose.connect("mongodb://127.0.0.1:27017/CISKS_Registers")
-  .then(() => {
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+    });
     console.log("Connected to Database");
-  })
-  .catch((err) => {
-    console.log("Connection failed to database", err);
-  });
+  } catch (err) {
+    console.error("Connection failed to database", err);
+    process.exit(1);
+  }
+};
 
-export default mongoose;
+export default connectDB;

@@ -2,21 +2,9 @@ import express from 'express';
 import Books_collection from "../models/Books_collection.js";
 import Students from '../models/Reg_students.js';
 import IssueModel from "../models/issue.js"; 
-import nodemailer from 'nodemailer';
 
 
 const router = express.Router();
-
-// Create reusable transporter object
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-  user: process.env.EMAIL_USER,  // Match main.js variables
-  pass: process.env.EMAIL_PASS
-},
-  logger: true,
-  debug: true,
-});
 
 // ✅ Enhanced Issue Book Route with Auto-Email
 router.post('/issueBook', async (req, res) => {

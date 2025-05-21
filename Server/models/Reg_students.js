@@ -35,7 +35,11 @@ const studentSchema = new mongoose.Schema({
   name: { type: String, required: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  issuedBooks: [issuedBookSchema]
+  issuedBooks: [issuedBookSchema],
+  isAdmin: {
+    type: Boolean,
+    default: false
+  }
 });
 
 studentSchema.pre("save", async function (next) {
@@ -45,5 +49,5 @@ studentSchema.pre("save", async function (next) {
   next();
 });
 
-const Students = mongoose.model("Register", studentSchema);
+const Students = mongoose.model('Student', studentSchema, 'registers');
 export default Students;

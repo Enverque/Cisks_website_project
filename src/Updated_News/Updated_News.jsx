@@ -2,36 +2,53 @@ import React, { useEffect, useState } from "react";
 import "./Updated_News.css";
 import { Link } from "react-router-dom";
 
-const slidesData = [
-    { img: "/Events_img/img1.png", text: "Swami Vivekananda birth anniversary celebration (13th Jan 2025)." },
-    { img: "/Events_img/img2.png", text: "Lamp lighting on Swami Vivekananda birth anniversary by IIT Indore Professors." },
-    { img: "/Events_img/img3.png", text: "Three-day Nitividhana workshop at IIT Indore (24th-27th Oct 2024)" },
-    { img: "/Events_img/img4.png", text: "Gold medal awarded to Sayali Vikhrankar for Sanskrit excellence." },
-    { img: "/Events_img/img5.png", text: "Apurva Kamble wins logo design competition at CISKS, IIT Indore." },
-    { img: "/Events_img/img6.png", text: "Centre for learning sanskrit at CISKS, IIT Indore - 3 years of excellence." },
-    { img: "/Gallery/img12.jpg",   text: "The Sanskrit Sambhāṣaṇa Śivira event encouraged participants to engage with the language in a fun and practical way, fostering a deeper appreciation for our cultural heritage."}
-];
-
 function Updated_News() {
     const [index, setIndex] = useState(0);
+    const [events, setEvents] = useState([]);
+
+    // Fetch updated events from the correct API endpoint
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await fetch('/api/updated-events');
+                const data = await response.json();
+                setEvents(data);
+            } catch (error) {
+                console.error('Error fetching updated events:', error);
+                setEvents([]);
+            }
+        };
+        fetchEvents();
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setIndex((prevIndex) => (prevIndex + 1) % slidesData.length);
-        }, 3000); // Change slide every 3 seconds
-
+            if (events.length > 0) {
+                setIndex((prev) => (prev + 1) % events.length);
+            }
+        }, 3000);
         return () => clearInterval(interval);
-    }, []);
+    }, [events.length]);
+
+    if (events.length === 0) {
+        return <div className="Updated_News">Loading events...</div>;
+    }
 
     return (
         <div className="Updated_News">
-            <div className="Updated_News_Wrapper" style={{ transform: `translateY(-${index * 110}px)`, transition: "transform 1s ease-in-out" }}>
-                {slidesData.map((slide, i) => (
-                    <Link>
-                    <div key={i} className={`Updated_slide ${i === index ? "active" : ""}`}>
-                        <img src={slide.img} alt="Event" />
-                        <p>{slide.text}</p>
-                    </div>
+            <div
+                className="Updated_News_Wrapper"
+                style={{
+                    transform: `translateY(-${index * 110}px)`,
+                    transition: "transform 1s ease-in-out",
+                }}
+            >
+                {events.map((event, i) => (
+                    <Link to="/Events" key={event._id || i}>
+                        <div className={`Updated_slide ${i === index ? "active" : ""}`}>
+                            <img src={event.imagePath} alt={event.title} />
+                            <h6>{event.content}</h6>
+                        </div>
                     </Link>
                 ))}
             </div>

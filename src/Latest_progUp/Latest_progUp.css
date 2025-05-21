@@ -1,36 +1,42 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
 .Latest_progUp_slider {
     position: relative;
     width: 100%; 
     height: 50px;
     overflow: hidden;
     background: #1c9ea2;
+    cursor: pointer; /* Optional: makes the slider interactive */
+}
 
-}
 .Latest_progUp_center {
-    position: relative;
-    width: 100%;
-}
-.Latest_progUp_box {
-    position: absolute;
-    color: white;
-    align-content: center;
-    padding: 5px 0;
-    font-size: 17px;
+    display: flex;
+    flex-direction: row; /* Arrange content in a row */
+    width: 100%; /* Ensure the width is full */
     animation: slideBook 20s infinite linear;
-    width: 100%;
+}
+
+.Latest_progUp_box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    padding: 5px 25px;
+    font-size: 17px;
     white-space: nowrap;
 }
-.Latest_progUp_box:hover {
-    animation-play-state: paused;
+
+.Latest_progUp_slider:hover .Latest_progUp_center {
+    animation-play-state: paused; /* Pause the animation when hovering over the slider */
 }
+
 @keyframes slideBook {
     0% {
-        transform: translateX(-100%); /* Start just off the screen to the left */
+        transform: translateX(-20%); /* Start just off the screen to the left */
         opacity: 1;
     }
     50% {
@@ -42,4 +48,3 @@
         opacity: 1;
     }
 }
-

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Navbar from "./Navbar";
+import Cursor from "./Cursor";
 import Dropdown from "./Dropdown";
 import Footer from "./Footer";
 import Home from "./Home";
@@ -24,12 +25,14 @@ import Projects from "./Projects/Projects";
 import Staff from "./People/Staff";
 import Error from "./Error/Error";
 import Internship from "./Opportunity/Internship";
+import AdminPanel from './Admin_panel';
 
 
 
 
 function App() {
   const [loading, setLoading] = useState(false);
+  const [showTopButton, setShowTopButton] = useState(false);
 
   useEffect(() => {
     const preloaderShown = sessionStorage.getItem("preloaderShown");
@@ -47,10 +50,24 @@ function App() {
     return <Preloader />;
   }
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowTopButton(window.scrollY > 100); // adjust scroll threshold as needed
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <Router>
       <Navbar />
       <Dropdown />
+      <Cursor />
+      <a href="#Navbar_brand" className={`Top_btn ${showTopButton ? 'visible' : ''}`}>
+          <button>⬆️</button>
+      </a>
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route exact path="/About_cisks" element={<About_cisks />} />
@@ -70,6 +87,7 @@ function App() {
         <Route exact path="/Projects" element={<Projects />} />
         <Route exact path="/People/Staff" element={<Staff />} />
         <Route exact path="/Internship" element={<Internship />} />
+        <Route exact path="/AdminPanel" element={<AdminPanel />} />
         <Route  path="*" element={<Error />} />
       </Routes>
       <Footer />

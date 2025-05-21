@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Login.css";
 import { toast } from 'react-toastify';
+import axios from 'axios';
+
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -16,43 +18,37 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    
     try {
       const res = await fetch("/api/Login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
+        credentials: 'include' // Important for cookies
       });
   
-      const data = await res.text();
+      const data = await res.json(); // Changed from res.text()
   
       if (res.ok) {
-        // ✅ Successful Login
-        localStorage.setItem("userLoggedIn", true);
-  
-        const queryParams = new URLSearchParams(window.location.search);
-        const redirectAction = queryParams.get("redirect");
-        const autoIssueId = queryParams.get("autoIssue");
-  
-        if (redirectAction === "issueBook" && autoIssueId) {
-          window.location.href = `/Books?autoIssue=${autoIssueId}`;
+        // Use data from response
+        if (data.isAdmin) {
+          navigate('/AdminPanel');
         } else {
-          window.location.href = "/Books";
+          const queryParams = new URLSearchParams(window.location.search);
+          const autoIssueId = queryParams.get("autoIssue");
+          navigate(autoIssueId ? `/Books?autoIssue=${autoIssueId}` : '/Books');
         }
-  
       } else {
-        // ✅ If user not found
-        if (res.status === 404 || data.toLowerCase().includes("user not found")) {
+        if (res.status === 404 || data.error?.toLowerCase().includes("user not found")) {
           toast.error("User not found! Redirecting to Register...");
           navigate("/Register");
         } else {
-          // ✅ For other errors
-          toast.error(" Login Failed: " + data);
+          toast.error("Login Failed: " + data.error);
         }
       }
     } catch (err) {
       console.error("Error during fetch:", err);
-      toast.error(" Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
   
