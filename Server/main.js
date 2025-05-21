@@ -42,7 +42,7 @@ import checkDueBooks from "./config/checkDueBooks.js";
 import Event from './models/Events.js';
 import Students from "./models/Reg_students.js";
 import Books_collection from './models/Books_collection.js';
-import IssueModel from "./models/issue.js";
+import IssueModel from "./models/Issue.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import cron from 'node-cron'; 

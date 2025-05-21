@@ -1,7 +1,7 @@
 import express from 'express';
 import Books_collection from "../models/Books_collection.js";
 import Students from '../models/Reg_students.js';
-import IssueModel from "../models/issue.js"; 
+import IssueModel from "../models/Issue.js"; 
 
 
 const router = express.Router();
