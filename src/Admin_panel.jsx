@@ -101,7 +101,7 @@ const Admin_panel = () => {
             />
           )}
 
-          {/* Content Field */}
+        
           {!["carousel", "gallery", "newbook", "homeslider", "booktitle"].includes(formData.category) && (
             <textarea
               placeholder="Event Content"
@@ -111,7 +111,7 @@ const Admin_panel = () => {
             />
           )}
 
-          {/* Date Field */}
+         
             <input
               type="date"
               value={formData.date}
@@ -119,7 +119,7 @@ const Admin_panel = () => {
               className="w-full p-2 border rounded"
             />
 
-            {/* Category Dropdown */}
+     
           <select
             value={formData.category}
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -145,7 +145,7 @@ const Admin_panel = () => {
             />
           )}
 
-          {/* Submit Button */}
+     
           <button
             type="submit"
             className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
@@ -155,7 +155,7 @@ const Admin_panel = () => {
         </div>
       </form>
 
-      {/* Event List */}
+    
       <div className="space-y-4 content_section">
         <h3 className="text-xl font-semibold mb-4">
           {formData.category.charAt(0).toUpperCase() + formData.category.slice(1)} Events

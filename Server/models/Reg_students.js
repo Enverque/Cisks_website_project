@@ -16,7 +16,7 @@ const issuedBookSchema = new mongoose.Schema({
   },
   issueDate: Date,
   issueTime: String,
-  dueDate: Date, // <-- Added dueDate to schedule reminder
+  dueDate: Date,
   returned: {
     type: Boolean,
     default: false

@@ -49,15 +49,15 @@ function Register() {
       
         <form onSubmit={handleSubmit}>
         <div className="Userdetail">
-                    <label htmlFor="name">Name</label> 
-                    <input type="text" 
-                    id="name" 
-                    placeholder="Enter Your Name"
-                    name="name" 
-                    onChange={handlechange}
-                    value={formdata.name}
-                    required />
-                </div>
+            <label htmlFor="name">Name</label> 
+            <input type="text" 
+              id="name" 
+              placeholder="Enter Your Name"
+              name="name" 
+              onChange={handlechange}
+              value={formdata.name}
+              required />
+        </div>
           <div className="Userdetail">
             <label htmlFor="username">Username</label>
             <input

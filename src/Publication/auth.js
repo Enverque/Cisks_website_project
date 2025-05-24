@@ -1,9 +1,11 @@
+const baseURL = "https://cisksbackend1-0.onrender.com/api";
+
 export const checkAuthStatus = async () => {
     try {
-      const response = await fetch("http://localhost:3000/check-auth", {
-        method: "GET",
-        credentials: "include", // Send HTTP-only cookies
-      });
+      const response = await fetch(`${baseURL}/check-auth`, {
+      method: "GET",
+      credentials: "include",
+    });
   
       const data = await response.json();
   
@@ -26,10 +28,10 @@ export const checkAuthStatus = async () => {
   
   export const logoutUser = async () => {
     try {
-      const response = await fetch("http://localhost:3000/Logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(`${baseURL}/Logout`, {
+      method: "POST",
+      credentials: "include",
+    });
   
       if (response.ok) {
         localStorage.removeItem("userLoggedIn");

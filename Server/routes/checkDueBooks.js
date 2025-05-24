@@ -3,13 +3,17 @@ import checkDueBooks from '../config/checkDueBooks.js';
 
 const router = express.Router();
 const API_KEY = process.env.API_KEY;
+const NODE_ENV = process.env.NODE_ENV || 'production'; // Defaults to 'production' if not set
 
 router.get('/', async (req, res) => {
   try {
-    // Verify API Key for external requests
-    if (req.headers['x-api-key'] !== API_KEY && !req.hostname.includes('localhost')) {
-      return res.status(403).json({ error: "Unauthorized" });
+    // In production, always require API key for security
+    if (NODE_ENV === 'production') {
+      if (req.headers['x-api-key'] !== API_KEY) {
+        return res.status(403).json({ error: "Unauthorized: Invalid API key" });
+      }
     }
+    
 
     const result = await checkDueBooks();
     res.json(result);

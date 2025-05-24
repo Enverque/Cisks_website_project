@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./My_profile.css";
-import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 function My_profile() {

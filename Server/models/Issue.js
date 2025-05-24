@@ -14,9 +14,9 @@ const issueSchema = new mongoose.Schema({
   },
   title: String,
   author: String,
-  Category: [Number], // Changed to array to match book collection
-  issueDate: Date,    // Use proper Date type
-  dueDate: Date       // Add this field for consistency
+  Category: [Number], 
+  issueDate: Date,    
+  dueDate: Date       
 }, {
   timestamps: true,
 });

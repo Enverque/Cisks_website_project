@@ -13,11 +13,12 @@ function Forget_password() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     
-    const API_BASE = "http://localhost:3000";
+    const API_BASE = "https://cisksbackend1-0.onrender.com";
+
 
     const sendOTP = async () => {
         if (!email.trim()) {
-            toast.error("Please enter your email");
+            toast.error("Please enter your Institute email");
             return;
         }
 

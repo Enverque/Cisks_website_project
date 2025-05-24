@@ -12,7 +12,7 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ Extract redirect params if they exist (optional)
+  // Extract redirect params if they exist (optional)
   const queryParams = new URLSearchParams(location.search);
   const autoIssueBookId = queryParams.get("autoIssue");
 
@@ -24,7 +24,7 @@ function Login() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
-        credentials: 'include' // Important for cookies
+        credentials: 'include'
       });
   
       const data = await res.json(); // Changed from res.text()

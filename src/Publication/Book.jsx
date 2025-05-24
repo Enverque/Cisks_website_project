@@ -30,7 +30,7 @@ function Book() {
     if (response.ok) {
       const issuedMap = {};
       data.forEach((book) => {
-        // Only mark as issued if not returned
+    
         if (!book.returned) {
           issuedMap[book.bookId] = {
             issued: true,
@@ -50,8 +50,9 @@ function Book() {
 const refreshIssuedBooks = async () => {
   await fetchIssuedBooks();
 };
+
+
 // Pass refresh function to My_profile component
-// (You'll need to modify your routing/navigation to pass this prop)
 <NavLink to="/My_profile" state={{ refreshIssuedBooks }}>
   Profile
 </NavLink>
@@ -152,19 +153,18 @@ const refreshIssuedBooks = async () => {
     }
   };
 
-  // Faster search by category number
+
   const handleAdvanceSearch = () => {
     if (searchCategory.trim() === "") {
       setBooks([]);
       return;
     }
 
-    // Split input by commas and convert to numbers (e.g., "1,2" → [1, 2])
+
     const searchCategories = searchCategory
       .split(",")
       .map((c) => parseInt(c.trim(), 10));
 
-    // Check if all parts are valid numbers
     if (searchCategories.some(isNaN)) {
       setBooks([]);
       return;
