@@ -91,7 +91,7 @@ app.use('/api/check-due-books',checkDueBooksRouter);
 app.use('/api/AdminPanel',adminPanelRouter);
 app.use('/api/issueBook', issueBookRouter);
 
-const Staticpath = path.join(__dirname, "dist");
+const Staticpath = path.join(__dirname, "../dist");
 app.use(express.static(Staticpath));
 
 app.use((err, req, res, next) => {
@@ -436,7 +436,7 @@ app.post("/api/reset-password", async (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(__dirname, "dist", "index.html");
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
 
