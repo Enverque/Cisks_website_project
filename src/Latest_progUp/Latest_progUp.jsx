@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./Latest_progUp.css";
 
 const Latest_progUp = () => {
-    const [events, setEvents] = useState([]); // ✅ correct state for multiple items
+    const [events, setEvents] = useState([]); //
 
     useEffect(() => {
         const fetchHomeNews = async () => {
             try {
-                const response = await fetch('/api/homeslider-events');
+                const response = await fetch('https://cisksbackend1-0.onrender.com/api/homeslider-events');
                 const data = await response.json();
                 console.log("Fetched home slider events:", data);
 

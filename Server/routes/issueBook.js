@@ -6,7 +6,7 @@ import IssueModel from "../models/Issue.js";
 
 const router = express.Router();
 
-// ✅ Enhanced Issue Book Route with Auto-Email
+// Enhanced Issue Book Route with Auto-Email
 router.post('/issueBook', async (req, res) => {
   try {
     const { userId, bookId } = req.body;
@@ -117,7 +117,7 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
-// ✅ Quantity Update Route (unchanged)
+// Quantity Update Route (unchanged)
 router.post('/updateBookQuantity', async (req, res) => {
   const { bookId, change } = req.body;
 
@@ -188,7 +188,7 @@ router.post("/issue-book", async (req, res) => {
   }
 });
 
-// ✅ Get Issued Books Route
+// Get Issued Books Route
 router.get('/issued-books', async (req, res) => {
   try {
     const { userId } = req.query;

@@ -9,7 +9,7 @@ function Book_slider() {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await fetch('/api/booktitle-events'); // Fetch book titles from backend
+                const response = await fetch('https://cisksbackend1-0.onrender.com/api/booktitle-events'); // Fetch book titles from backend
                 const data = await response.json();
                 setBooks(data); 
             } catch (error) {

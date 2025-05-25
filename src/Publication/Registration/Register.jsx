@@ -23,8 +23,8 @@ function Register() {
     e.preventDefault(); // Prevent page reload
 
     try {
-        const response = await axios.post("/api/Register", formdata);
-    // ✅ Backend URL + port
+        const response = await axios.post("https://cisksbackend1-0.onrender.com/api/Register", formdata);
+    // Backend URL + port
 
       const result = response.data;
 

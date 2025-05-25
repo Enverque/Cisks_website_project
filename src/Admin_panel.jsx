@@ -18,7 +18,7 @@ const Admin_panel = () => {
   useEffect(() => {
     const verifyAdmin = async () => {
       try {
-        const res = await axios.get('/api/verify-admin', { withCredentials: true });
+        const res = await axios.get('https://cisksbackend1-0.onrender.com/api/verify-admin', { withCredentials: true });
         if (!res.data.valid) navigate('/login');
       } catch (error) {
         navigate('/login');
@@ -34,7 +34,7 @@ const Admin_panel = () => {
 
   const fetchEvents = async () => {
     try {
-      const res = await axios.get(`/api/${formData.category}-events`);
+      const res = await axios.get(`https://cisksbackend1-0.onrender.com/api/${formData.category}-events`);
       setEvents(res.data);
     } catch (err) {
       console.error("Error fetching events:", err);
@@ -61,7 +61,7 @@ const Admin_panel = () => {
       form.append('date', date);
       if (image) form.append('image', image);
 
-      await axios.post('/api/events', form, {
+      await axios.post('https://cisksbackend1-0.onrender.com/api/events', form, {
         headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true
       });
@@ -76,7 +76,7 @@ const Admin_panel = () => {
   const handleDelete = async (id) => {
     toast.success("Event deleted Successfully!");
     try {
-      await axios.delete(`/api/events/${id}`, { withCredentials: true });
+      await axios.delete(`https://cisksbackend1-0.onrender.com/api/events/${id}`, { withCredentials: true });
       fetchEvents();
     } catch (err) {
       console.error("Error deleting event:", err);

@@ -17,7 +17,7 @@ function My_profile() {
         return;
       }
 
-      const response = await fetch(`/api/user/${userId}/books`);
+      const response = await fetch(`https://cisksbackend1-0.onrender.com/api/user/${userId}/books`);
       
       if (!response.ok) {
         const errorData = await response.json();
@@ -40,7 +40,7 @@ function My_profile() {
   const handleReturn = async (bookId) => {
     try {
       setReturningBookId(bookId);
-      const response = await fetch('/api/returnBook', {
+      const response = await fetch('https://cisksbackend1-0.onrender.com/api/returnBook', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

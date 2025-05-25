@@ -8,7 +8,7 @@ function Events() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await axios.get("/api/program-events");
+        const res = await axios.get("https://cisksbackend1-0.onrender.com/api/program-events");
         setEventsData(res.data);
       } catch (error) {
         console.error("Error fetching event data:", error);

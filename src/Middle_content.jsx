@@ -11,7 +11,7 @@ function Middle_content() {
     useEffect(() => {
         const fetchCarouselItems = async () => {
             try {
-                const response = await axios.get('/api/carousel-events');
+                const response = await axios.get('https://cisksbackend1-0.onrender.com/api/carousel-events');
                 setCarouselItems(response.data);
             } catch (error) {
                 console.error('Error fetching carousel items:', error);

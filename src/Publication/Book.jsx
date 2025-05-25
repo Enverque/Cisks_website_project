@@ -24,7 +24,7 @@ function Book() {
   if (!userId) return;
 
   try {
-    const response = await fetch(`/api/user/${userId}/books`);
+    const response = await fetch(`https://cisksbackend1-0.onrender.com/api/user/${userId}/books`);
     const data = await response.json();
 
     if (response.ok) {
@@ -66,7 +66,7 @@ const refreshIssuedBooks = async () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch("/api/Books_collection");
+        const response = await fetch("https://cisksbackend1-0.onrender.com/api/Books_collection");
         const data = await response.json();
         setAllBooks(data);
         setBooks([]);
@@ -122,7 +122,7 @@ const refreshIssuedBooks = async () => {
     }
 
     try {
-      const response = await fetch('/api/issueBook', {
+      const response = await fetch('https://cisksbackend1-0.onrender.com/api/issueBook', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -217,7 +217,7 @@ const refreshIssuedBooks = async () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("/api/check-auth", {
+        const response = await fetch("https://cisksbackend1-0.onrender.com/api/check-auth", {
           method: "GET",
           credentials: "include",
         });
@@ -242,7 +242,7 @@ const refreshIssuedBooks = async () => {
   // Logout handler
   const handleLogout = async () => {
     try {
-      const response = await fetch("/api/Logout", {
+      const response = await fetch("https://cisksbackend1-0.onrender.com/api/Logout", {
         method: "POST",
         credentials: "include",
       });

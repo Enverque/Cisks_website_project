@@ -8,7 +8,7 @@ function Gallery() {
   useEffect(() => {
     const fetchGalleryItems = async () => {
       try {
-        const response = await axios.get('/api/gallery-events');
+        const response = await axios.get('https://cisksbackend1-0.onrender.com/api/gallery-events');
         setGalleryItems(response.data);
       } catch (error) {
         console.error('Error fetching gallery items:', error);

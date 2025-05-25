@@ -20,7 +20,7 @@ function Login() {
     e.preventDefault();
     
     try {
-      const res = await fetch("/api/Login", {
+      const res = await fetch("https://cisksbackend1-0.onrender.com/api/Login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

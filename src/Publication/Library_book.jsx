@@ -10,7 +10,7 @@ function LibraryBook() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get('/api/newbook-events'); 
+        const response = await axios.get('https://cisksbackend1-0.onrender.com/api/newbook-events'); 
         setBooks(response.data); 
       } catch (error) {
         console.error("Error fetching books:", error);

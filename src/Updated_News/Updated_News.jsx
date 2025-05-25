@@ -10,7 +10,7 @@ function Updated_News() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await fetch('/api/updated-events');
+                const response = await fetch('https://cisksbackend1-0.onrender.com/api/updated-events');
                 const data = await response.json();
                 setEvents(data);
             } catch (error) {
