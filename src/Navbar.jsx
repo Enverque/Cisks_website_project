@@ -8,7 +8,7 @@ function Navbar() {
     return(
         <>
                 <div className="header navbar-expand-lg">
-                        <a class="navbar-brand" href="#" id="Navbar_brand">
+                        <a className="navbar-brand" href="#" id="Navbar_brand">
                             <img src="/img/CISKS_logo.jpg" alt="Cisks logo"/>
                         </a>
 

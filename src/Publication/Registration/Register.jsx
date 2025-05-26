@@ -23,9 +23,7 @@ function Register() {
     e.preventDefault(); // Prevent page reload
 
     try {
-        const response = await axios.post("https://cisksbackend1-0.onrender.com/api/Register", formdata);
-    // Backend URL + port
-
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/Register`,formdata);
       const result = response.data;
 
       if (response.status === 200) {

@@ -409,8 +409,8 @@ app.get('/api/user/:userId/books', async (req, res) => {
 app.post("/api/Logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "Strict",
+    secure: true,
+    sameSite: "None",
   });
   res.json({ message: "Logged out successfully" });
 });

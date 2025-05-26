@@ -7,17 +7,20 @@ function Latest_News_Event() {
 
     // Fetch latest events from the correct API endpoint
     useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const response = await fetch('https://cisksbackend1-0.onrender.com/api/latest-events');
-                const data = await response.json();
-                setItems(data);
-            } catch (error) {
-                console.error('Error fetching latest events:', error);
-            }
-        };
-        fetchEvents();
-    }, []);
+    const fetchEvents = async () => {
+        try {
+            const response = await fetch('https://cisksbackend1-0.onrender.com/api/latest-events');
+            if (!response.ok) throw new Error('API failed');
+            const data = await response.json();
+            setItems(Array.isArray(data) ? data : []); // Ensure array
+        } catch (error) {
+            console.error('Error fetching latest events:', error);
+            setItems([]); //  Set empty array on error
+        }
+    };
+    fetchEvents();
+}, []);
+
 
     useEffect(() => {
         const interval = setInterval(() => {

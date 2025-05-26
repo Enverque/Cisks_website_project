@@ -7,19 +7,21 @@ function Updated_News() {
     const [events, setEvents] = useState([]);
 
     // Fetch updated events from the correct API endpoint
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const response = await fetch('https://cisksbackend1-0.onrender.com/api/updated-events');
-                const data = await response.json();
-                setEvents(data);
-            } catch (error) {
-                console.error('Error fetching updated events:', error);
-                setEvents([]);
-            }
-        };
-        fetchEvents();
-    }, []);
+   useEffect(() => {
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('https://cisksbackend1-0.onrender.com/api/updated-events');
+      if (!response.ok) throw new Error('API error');
+      const data = await response.json();
+      setEvents(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error_fetching_updated_events:', error);
+      setEvents([]);
+    }
+  };
+  fetchEvents();
+}, []);
+
 
     useEffect(() => {
         const interval = setInterval(() => {

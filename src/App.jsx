@@ -17,7 +17,7 @@ import Events from "./Outreach/Events/Events";
 import Preloader from "./Preloader"; 
 import Book from "./Publication/Book";
 import Login from "./Publication/Login_page/Login";
-import Registration from "./Publication/Registration/Register";
+import Register from "./Publication/Registration/Register";
 import Automail from "./Automail/Automail";
 import My_profile from "./Publication/My_profile/My_profile";
 import Forget_password from "./Publication/Forget_password/Forget_password";
@@ -26,6 +26,8 @@ import Staff from "./People/Staff";
 import Error from "./Error/Error";
 import Internship from "./Opportunity/Internship";
 import AdminPanel from './Admin_panel';
+import { ToastContainer, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -68,6 +70,21 @@ function App() {
           <button>⬆️</button>
       </a>
 
+      <ToastContainer 
+        bodyClassName="toastBody"
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route exact path="/About_cisks" element={<About_cisks />} />
@@ -80,7 +97,7 @@ function App() {
         <Route exact path="/Events" element={<Events />} />
         <Route exact path="/BOOKS" element={<Book />} />
         <Route exact path="/Login" element={<Login />} />
-        <Route exact path="/Register" element={<Registration />} />
+        <Route exact path="/Register" element={<Register />} />
         <Route exact path="/auotmail" element={<Automail />} />
         <Route exact path="/My_profile" element={<My_profile />} />
         <Route exact path="/Forget_password" element={<Forget_password />} />

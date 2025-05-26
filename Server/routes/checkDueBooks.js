@@ -3,7 +3,7 @@ import checkDueBooks from '../config/checkDueBooks.js';
 
 const router = express.Router();
 const API_KEY = process.env.API_KEY;
-const NODE_ENV = process.env.NODE_ENV || 'production'; // Defaults to 'production' if not set
+const NODE_ENV = process.env.NODE_ENV || 'production'; // Defaults to production 
 
 router.get('/', async (req, res) => {
   try {
