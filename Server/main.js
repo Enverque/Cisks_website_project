@@ -117,7 +117,7 @@ cron.schedule('* * * * *', async () => {
 
 
 
-app.post('/api/events', upload.single('image'), async (req, res) => {
+app.post('https://cisksbackend1-0.onrender.com/api/events', upload.single('image'), async (req, res) => {
   try {
     const { title, content, category, date } = req.body;
     const imagePath = req.file ? `/events/${req.file.filename}` : '';
@@ -137,7 +137,7 @@ app.post('/api/events', upload.single('image'), async (req, res) => {
   }
 });
 
-app.delete('/api/events/:id', async (req, res) => {
+app.delete('https://cisksbackend1-0.onrender.com/api/events/:id', async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     
@@ -168,7 +168,7 @@ app.delete('/api/events/:id', async (req, res) => {
 const otpStore = {};
 const generateOTP = () => Math.floor(1000 + Math.random() * 9000);
 
-app.post("/api/send-otp", async (req, res) => {
+app.post("https://cisksbackend1-0.onrender.com/api/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: "Email is required" });
@@ -193,7 +193,7 @@ app.post("/api/send-otp", async (req, res) => {
   }
 });
 
-app.post("/api/verify-otp", (req, res) => {
+app.post("https://cisksbackend1-0.onrender.com/api/verify-otp", (req, res) => {
   try {
     const { email, otp } = req.body;
     if (!email || !otp) return res.status(400).json({ error: "Email and OTP are required" });
@@ -212,7 +212,7 @@ app.post("/api/verify-otp", (req, res) => {
 
 
 
-app.post("/api/Register", async (req, res) => {
+app.post("https://cisksbackend1-0.onrender.com/api/Register", async (req, res) => {
   try {
     const { name, username, password } = req.body;
     const trimmedUsername = username.trim();
@@ -230,7 +230,7 @@ app.post("/api/Register", async (req, res) => {
   }
 });
 
-app.post("/api/Login", async (req, res) => {
+app.post("https://cisksbackend1-0.onrender.com/api/Login", async (req, res) => {
   try {
     const { username, password } = req.body;
     const trimmedUsername = username.trim();
@@ -282,7 +282,7 @@ app.post("/api/Login", async (req, res) => {
   }
 });
 
-app.post('/api/issueBook', async (req, res) => {
+app.post('https://cisksbackend1-0.onrender.com/api/issueBook', async (req, res) => {
   try {
     const { userId, bookId } = req.body;
 
@@ -354,7 +354,7 @@ app.post('/api/issueBook', async (req, res) => {
   }
 });
 
-app.post('/api/returnBook', async (req, res) => {
+app.post('https://cisksbackend1-0.onrender.com/api/returnBook', async (req, res) => {
   try {
     const { userId, bookId } = req.body;
     
@@ -391,7 +391,7 @@ app.post('/api/returnBook', async (req, res) => {
 
 
 
-app.get('/api/user/:userId/books', async (req, res) => {
+app.get('https://cisksbackend1-0.onrender.com/api/user/:userId/books', async (req, res) => {
   try {
     const user = await Students.findById(req.params.userId)
       .select('issuedBooks -_id');
@@ -405,7 +405,7 @@ app.get('/api/user/:userId/books', async (req, res) => {
   }
 });
 
-app.post("/api/Logout", (req, res) => {
+app.post("https://cisksbackend1-0.onrender.com/api/Logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: false,
@@ -414,7 +414,7 @@ app.post("/api/Logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
-app.post("/api/reset-password", async (req, res) => {
+app.post("https://cisksbackend1-0.onrender.com/api/reset-password", async (req, res) => {
   try {
     const { email, newPassword } = req.body;
     
