@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import "./Login.css";
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -64,7 +64,7 @@ function Login() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             id="username"
-            placeholder="Enter Your Email"
+            placeholder="Enter Your Institute Email"
             name="username"
             required
           />
@@ -86,12 +86,12 @@ function Login() {
         </button>
 
         <button className="Register-btn">
-          <a href="/Register">Register Now</a>
+          <Link to="/Register">Register Now</Link>
         </button>
 
-        <a href="/Forget_password" className="forgot-password">
+        <Link to="/Forget_password" className="forgot-password">
           Forgot Password?
-        </a>
+        </Link>
 
         {message && <p>{message}</p>}
       </form>

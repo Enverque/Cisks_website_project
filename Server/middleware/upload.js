@@ -1,22 +1,25 @@
 import multer from 'multer';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import dotenv from 'dotenv';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../../public/events'));
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
 });
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) cb(null, true);
-  else cb(new Error('Only images are allowed'), false);
-};
-const upload = multer({ storage, fileFilter, limits: { fileSize: 20 * 1024 * 1024 } });
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'events',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    resource_type: 'image'
+  },
+});
+
+const upload = multer({ storage });
 
 export default upload;

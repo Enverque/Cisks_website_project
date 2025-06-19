@@ -20,13 +20,14 @@ function Footer() {
                     </div>
                     <div className="Social_media">
                         <h3>Social Media</h3>
-                        <Link to="/*">  <img src="/img/Insta.png" />  </Link>
-                        <Link to="/*"> <img src="/img/Fb.png" /> </Link>
-                        <Link to="/*"> <img src="/img/X.png" /></Link>
+                        <Link to="/*">  <img src="/img/Insta.png" alt="instagram logo" />  </Link>
+                        <Link to="/*"> <img src="/img/Fb.png" alt="facebook logo" /> </Link>
+                        <Link to="/*"> <img src="/img/X.png" alt="twitter logo " /></Link>
                     </div>
                     <div className="map-container">
                         <h3>Location</h3>
                         <iframe 
+                            title="Map showing location of the office" 
                             src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14741.2387471303!2d75.91364945!3d22.53006905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1738912496171!5m2!1sen!2sin" 
                             allowFullScreen
                             loading="lazy"
@@ -38,7 +39,7 @@ function Footer() {
 
                 <div className="Lower_bottom">
                     <p>&copy;2021 Center for Indian Scientific Knowledge Systems, IIT Indore</p>
-                    <p>Designed and Developed By Himanshu Verma(30 April 2025 )</p>
+                    <p>Designed and Developed By Himanshu Verma</p>
                     
                 </div> 
             </div>

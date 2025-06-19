@@ -2,29 +2,28 @@ import React, { useEffect, useState } from "react";
 import "./Latest_progUp.css";
 
 const Latest_progUp = () => {
-    const [events, setEvents] = useState([]); //
+    const [events, setEvents] = useState([]); 
 
     useEffect(() => {
-  const fetchHomeNews = async () => {
-    try {
-      const response = await fetch('https://cisksbackend1-0.onrender.com/api/homeslider-events');
-      const data = await response.json();
-      console.log("Fetched home slider events:", data);
+        const fetchHomeNews = async () => {
+            try {
+                const response = await fetch('https://cisksbackend1-0.onrender.com/api/homeslider-events');
+                const data = await response.json();
+                console.log("Fetched home slider events:", data);
 
-      if (Array.isArray(data) && data.length > 0) {
-        setEvents(data); // save the full array
-      } else {
-        setEvents([]);
-      }
-    } catch (error) {
-      console.error("Error_fetching_home_news:", error);
-      setEvents([]);
-    }
-  };
+                if (Array.isArray(data) && data.length > 0) {
+                    setEvents(data); // ✅ save the full array
+                } else {
+                    setEvents([]);
+                }
+            } catch (error) {
+                console.error("Error fetching home news:", error);
+                setEvents([]);
+            }
+        };
 
-  fetchHomeNews();
-}, []);
-
+        fetchHomeNews();
+    }, []);
 
     return (
         <div className="Latest_progUp_slider">

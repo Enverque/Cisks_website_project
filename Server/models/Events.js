@@ -13,6 +13,7 @@ const eventSchema = new mongoose.Schema({
     default: Date.now
   },
   imagePath: String,
+  publicId: String,   
   createdAt: {
     type: Date,
     default: Date.now

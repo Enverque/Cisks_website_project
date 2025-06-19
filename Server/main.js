@@ -46,6 +46,7 @@ import IssueModel from "./models/Issue.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import cron from 'node-cron'; 
+import { v2 as cloudinary } from 'cloudinary';
 
 
 
@@ -61,12 +62,16 @@ const JWT_SECRET = process.env.JWT_SECRET;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: "https://cisks.iiti.ac.in",
+  origin: ["http://localhost:5173","https://cisks.iiti.ac.in"],
   methods: ["POST", "GET", "PUT", "DELETE"],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(cookieParser());
+app.use((req, res, next) => {
+  res.setHeader("Cache-Control", "no-store");
+  next();
+});
 
 
 // Static files
@@ -120,20 +125,23 @@ cron.schedule('* * * * *', async () => {
 app.post('/api/events', upload.single('image'), async (req, res) => {
   try {
     const { title, content, category, date } = req.body;
-    const baseUrl = 'https://cisksbackend1-0.onrender.com'; 
-    const imagePath = req.file ? `${baseUrl}/events/${req.file.filename}` : '';
-    
+
+    const imagePath = req.file?.path || ''; // Cloudinary gives hosted URL
+    const publicId = req.file?.filename || ''; 
+
     const newEvent = new Event({ 
       title, 
       content,
       category: category || 'general',
       date: date || Date.now(),
-      imagePath 
+      imagePath ,
+      publicId
     });
-    
+
     await newEvent.save();
     res.status(201).json(newEvent);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -146,25 +154,25 @@ app.delete('/api/events/:id', async (req, res) => {
       return res.status(404).json({ error: 'Event not found' });
     }
 
-    // Delete associated image file
-    if (event.imagePath) {
-      const imagePath = path.join(__dirname, '../public', event.imagePath);
+    //Delete image from Cloudinary
+    if (event.publicId) {
       try {
-        await fs.access(imagePath);
-        await fs.unlink(imagePath);
-        console.log(`Deleted image: ${imagePath}`);
-      } catch (fileError) {
-        console.error('Error deleting image file:', fileError);
+        await cloudinary.uploader.destroy(event.publicId);
+        console.log(`Deleted image from Cloudinary: ${event.publicId}`);
+      } catch (cloudErr) {
+        console.error('Cloudinary deletion error:', cloudErr);
       }
     }
 
     await Event.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Event deleted' });
+    res.json({ message: 'Event and image deleted' });
   } catch (error) {
     console.error('Delete error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+
 
 const otpStore = {};
 const generateOTP = () => Math.floor(1000 + Math.random() * 9000);
