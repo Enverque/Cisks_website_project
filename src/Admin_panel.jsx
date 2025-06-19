@@ -66,12 +66,24 @@ const Admin_panel = () => {
         withCredentials: true
       });
 
-      setFormData({ title: '', content: '', date: '', category: 'latest', image: null });
-      fetchEvents();
-    } catch (err) {
-      console.error("Error uploading event:", err);
+       if (res.data.success) {
+      toast.success("Event created successfully!");
+      console.log("Image URL:", res.data.imageUrl); // Verify URL
+      setFormData({ 
+        title: '', 
+        content: '', 
+        date: '', 
+        category: 'latest', 
+        image: null 
+      });
+      fetchEvents(); // Refresh the list
     }
-  };
+  } catch (err) {
+    toast.error("Upload failed: " + err.message);
+    console.error("Full error:", err.response?.data || err.message);
+  }
+};
+
 
   const handleDelete = async (id) => {
     toast.success("Event deleted Successfully!");

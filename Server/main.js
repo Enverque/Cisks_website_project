@@ -62,7 +62,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: ["http://localhost:5173","https://cisks.iiti.ac.in"],
+  origin: "https://cisks.iiti.ac.in",
   methods: ["POST", "GET", "PUT", "DELETE"],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -124,27 +124,39 @@ cron.schedule('* * * * *', async () => {
 
 app.post('/api/events', upload.single('image'), async (req, res) => {
   try {
-    const { title, content, category, date } = req.body;
+    console.log("Cloudinary Upload Result:", req.file); // Check if path exists
+    if (!req.file) throw new Error("No file received");
 
-    const imagePath = req.file?.path || ''; // Cloudinary gives hosted URL
-    const publicId = req.file?.filename || ''; 
+    const { title, content, category, date } = req.body;
+    const imagePath = req.file.path; // Cloudinary URL
+    const publicId = req.file.public_id;
+
+    console.log("Image URL:", imagePath); // Log the URL
 
     const newEvent = new Event({ 
       title, 
       content,
-      category: category || 'general',
-      date: date || Date.now(),
-      imagePath ,
+      category,
+      date,
+      imagePath, // Ensure this is saved
       publicId
     });
 
     await newEvent.save();
-    res.status(201).json(newEvent);
+    res.status(201).json({ 
+      success: true,
+      event: newEvent,
+      imageUrl: imagePath // Send back the URL
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Server error' });
+    console.error("Upload Error:", error);
+    res.status(500).json({ 
+      success: false,
+      error: error.message 
+    });
   }
 });
+
 
 app.delete('/api/events/:id', async (req, res) => {
   try {
