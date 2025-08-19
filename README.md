@@ -38,8 +38,6 @@ node main.js
 Output on terminal:    Connected to Database
                        Server running on port 3000
 
-## special instruction : Go on browser and Use command for clear cache
-```(ctrl + shift + R)  ```
 
 ### 4. Start the Frontend :
 - Go back to root directory and run
