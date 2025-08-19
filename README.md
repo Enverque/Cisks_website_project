@@ -49,5 +49,3 @@ Output on terminal:    Connected to Database
 ```
 
 - This will start the development server and open the frontend in your browser.
-## special instruction :on browser Use this hard reload command for clear cache
-```(ctrl + shift + R)```
