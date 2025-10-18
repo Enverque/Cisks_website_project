@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { GoogleOAuthProvider } from '@react-oauth/google'; // ✅ NEW
+import { ToastContainer, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./App.css";
+
+// Import components
 import Navbar from "./Navbar";
 import Cursor from "./Cursor";
 import Dropdown from "./Dropdown";
@@ -18,7 +23,6 @@ import Preloader from "./Preloader";
 import Book from "./Publication/Book";
 import Login from "./Publication/Login_page/Login";
 import Register from "./Publication/Registration/Register";
-import Automail from "./Automail/Automail";
 import My_profile from "./Publication/My_profile/My_profile";
 import Forget_password from "./Publication/Forget_password/Forget_password";
 import Projects from "./Projects/Projects";
@@ -26,15 +30,13 @@ import Staff from "./People/Staff";
 import Error from "./Error/Error";
 import Internship from "./Opportunity/Internship";
 import AdminPanel from './Admin_panel';
-import { ToastContainer, Bounce } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-
-
 
 function App() {
   const [loading, setLoading] = useState(false);
   const [showTopButton, setShowTopButton] = useState(false);
+
+  // ✅ Get Google Client ID from environment variable
+  const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   useEffect(() => {
     const preloaderShown = sessionStorage.getItem("preloaderShown");
@@ -44,71 +46,73 @@ function App() {
       setTimeout(() => {
         setLoading(false);
         sessionStorage.setItem("preloaderShown", "true");
-      }, 2500); // Show preloader for 2.5s
+      }, 2500);
     }
   }, []);
 
-  if (loading) {
-    return <Preloader />;
-  }
-
   useEffect(() => {
     const handleScroll = () => {
-      setShowTopButton(window.scrollY > 100); // adjust scroll threshold as needed
+      setShowTopButton(window.scrollY > 100);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  if (loading) {
+    return <Preloader />;
+  }
+  
   return (
-    <Router>
-      <Navbar />
-      <Dropdown />
-      <Cursor />
-      <a href="#Navbar_brand" className={`Top_btn ${showTopButton ? 'visible' : ''}`}>
+    // ✅ Wrap entire app with GoogleOAuthProvider
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <BrowserRouter>
+        <Navbar />
+        <Dropdown />
+        <Cursor />
+        <a href="#Navbar_brand" className={`Top_btn ${showTopButton ? 'visible' : ''}`}>
           <button>⬆️</button>
-      </a>
+        </a>
 
-      <ToastContainer 
-        bodyClassName="toastBody"
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
+        <ToastContainer 
+          bodyClassName="toastBody"
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route exact path="/About_cisks" element={<About_cisks />} />
-        <Route exact path="/Vision_mission" element={<Vision_mission />} />
-        <Route exact path="/Objective" element={<Objective />} />
-        <Route exact path="/Focus_area" element={<Focus_area />} />
-        <Route exact path="/Research_area" element={<Research_area />} />
-        <Route exact path="/People/Faculty" element={<Faculty />} />
-        <Route exact path="/Gallery" element={<Gallery />} />
-        <Route exact path="/Events" element={<Events />} />
-        <Route exact path="/BOOKS" element={<Book />} />
-        <Route exact path="/Login" element={<Login />} />
-        <Route exact path="/Register" element={<Register />} />
-        <Route exact path="/auotmail" element={<Automail />} />
-        <Route exact path="/My_profile" element={<My_profile />} />
-        <Route exact path="/Forget_password" element={<Forget_password />} />
-        <Route exact path="/Projects" element={<Projects />} />
-        <Route exact path="/People/Staff" element={<Staff />} />
-        <Route exact path="/Internship" element={<Internship />} />
-        <Route exact path="/AdminPanel" element={<AdminPanel />} />
-        <Route  path="*" element={<Error />} />
-      </Routes>
-      <Footer />
-    </Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route exact path="/About_cisks" element={<About_cisks />} />
+          <Route exact path="/Vision_mission" element={<Vision_mission />} />
+          <Route exact path="/Objective" element={<Objective />} />
+          <Route exact path="/Focus_area" element={<Focus_area />} />
+          <Route exact path="/Research_area" element={<Research_area />} />
+          <Route exact path="/People/Faculty" element={<Faculty />} />
+          <Route exact path="/Gallery" element={<Gallery />} />
+          <Route exact path="/Events" element={<Events />} />
+          <Route exact path="/BOOKS" element={<Book />} />
+          <Route exact path="/Login" element={<Login />} />
+          <Route exact path="/Register" element={<Register />} />
+          <Route exact path="/My_profile" element={<My_profile />} />
+          <Route exact path="/Forget_password" element={<Forget_password />} />
+          <Route exact path="/Projects" element={<Projects />} />
+          <Route exact path="/People/Staff" element={<Staff />} />
+          <Route exact path="/Internship" element={<Internship />} />
+          <Route exact path="/AdminPanel" element={<AdminPanel />} />
+          <Route path="*" element={<Error />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }
 

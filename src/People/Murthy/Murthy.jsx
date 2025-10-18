@@ -9,7 +9,7 @@ function Murthy() {
                             <div className="Upper_Front_Card_Murthy">
                                 <img src="/Faculty_img/Murthy_sir.png" className="Murthy_img" alt="Ghanti Murthy iiti" />
                                 <h5 className="Name">Dr. Ganti S. Murthy</h5>
-                                <h6 className="position">Professor Incharge</h6>
+                                <h6 className="position">Professor In-Charge</h6>
                             </div>
                             <div className="Lower_Front_Card_Murthy">
                                 <p className="Murthy_email"><strong>Email :</strong> ganti.Murthy@iiti.ac.in</p>

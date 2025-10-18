@@ -10,7 +10,7 @@ function Staff() {
     return (
         <div className="staff-container">
             <div className="staff-box">
-                <h2 className="Prof_Incharge">Professor Incharge</h2>
+                <h2 className="Prof_Incharge">Professor In-charge</h2>
                 <Murthy />
             </div>
             <div className="staff-box">

@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-# .env file (to avoid pushing sensitive data)
+# .env file ()
 .env
 
 # Editor directories and files

@@ -8,7 +8,7 @@ function Neminath() {
                         <div className="Front_Card_Neminath">
                             <div className="Upper_Front_Card_Neminath">
                                 <img src="/Faculty_img/Neminath_cse.png" className="Neminath_img" alt=" Neminath iiti" />
-                                <h5 className="Name">Dr. Neminath Hubballo</h5>
+                                <h5 className="Name">Dr. Neminath Hubballi</h5>
                                 <h6 className="position">Professor, PhD, IIT Guwahati</h6>
                             </div>
                             <div className="Lower_Front_Card_Neminath">

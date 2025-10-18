@@ -117,6 +117,9 @@
         width: 20px;
         height: 20px;
     }
+    .carousel-item:first-child::after {
+    font-size: 1.8rem;
+  }
 }
 
 /* Small Devices (Tablets) */
@@ -124,6 +127,9 @@
     .carousel-inner img {
         max-height: 350px;
     }
+    .carousel-item:first-child::after {
+    font-size: 2.5rem;
+  }
 }
 
 /* Medium Devices (Laptops) */
@@ -131,6 +137,9 @@
     .carousel-inner img {
         max-height: 450px;
     }
+    .carousel-item:first-child::after {
+    font-size: 3.5rem;
+  }
 }
 
 /* Large Devices (Desktops) */
@@ -138,4 +147,7 @@
     .carousel-inner img {
         max-height: 600px;
     }
+    .carousel-item:first-child::after {
+    font-size: 5rem;
+  }
 }

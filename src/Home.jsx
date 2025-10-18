@@ -12,7 +12,6 @@ function Home() {
     <>
       <Middle_content />
       <Latest_progUp />
-      
       <div className="News">
           <div>
             <h2 className="Latest_News_Event_Heading"> News and Events</h2>

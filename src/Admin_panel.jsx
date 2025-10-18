@@ -18,7 +18,9 @@ const Admin_panel = () => {
   useEffect(() => {
     const verifyAdmin = async () => {
       try {
-        const res = await axios.get('https://cisksbackend1-0.onrender.com/api/verify-admin', { withCredentials: true });
+        const res = await axios.get('https://cisksbackend1-0.onrender.com/api/verify-admin', { 
+          withCredentials: true 
+        });
         if (!res.data.valid) navigate('/login');
       } catch (error) {
         navigate('/login');
@@ -38,6 +40,7 @@ const Admin_panel = () => {
       setEvents(res.data);
     } catch (err) {
       console.error("Error fetching events:", err);
+      toast.error("Failed to fetch events");
     }
   };
 
@@ -46,11 +49,22 @@ const Admin_panel = () => {
     const { title, content, date, category, image } = formData;
 
     if (['carousel', 'gallery', 'newbook'].includes(category)) {
-      if (!image || !date) return toast.error("Image and date are required");
-    } else if (['homeslider', 'booktitle'].includes(category)) {
-      if (!title) return toast.error("Title is required");
-    } else {
-      if (!title || !content || !date) return toast.error("All fields are required");
+      if (!image || !date) {
+        toast.error("Image and date are required");
+        return;
+      }    
+    } 
+    else if (['homeslider', 'booktitle'].includes(category)) {
+      if (!title) {
+        toast.error("Title is required");
+        return;
+      }    
+    } 
+    else {
+      if (!title || !content || !date) {
+        toast.error("All fields are required");
+        return;
+      }
     }
 
     try {
@@ -61,7 +75,7 @@ const Admin_panel = () => {
       form.append('date', date);
       if (image) form.append('image', image);
 
-      await axios.post('https://cisksbackend1-0.onrender.com/api/events', form, {
+      const res = await axios.post('https://cisksbackend1-0.onrender.com/api/events', form, {
         headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true
       });
@@ -88,7 +102,10 @@ const Admin_panel = () => {
   const handleDelete = async (id) => {
     toast.success("Event deleted Successfully!");
     try {
-      await axios.delete(`https://cisksbackend1-0.onrender.com/api/events/${id}`, { withCredentials: true });
+      await axios.delete(`https://cisksbackend1-0.onrender.com/api/events/${id}`, { 
+        withCredentials: true }
+      );
+      toast.success("Event deleted successfully!");
       fetchEvents();
     } catch (err) {
       console.error("Error deleting event:", err);

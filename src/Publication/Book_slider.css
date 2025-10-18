@@ -40,3 +40,67 @@
         opacity: 1;
     }
 }
+/* Extra small devices (phones under 480px) */
+@media (max-width: 480px) {
+    .Book_name_slider {
+        height: 40px;
+        margin: 0.5rem 5%;
+    }
+
+    .book_slider_box {
+        font-size: 12px;
+        animation-duration: 25s; /* slightly faster */
+    }
+}
+
+/* Small devices (phones 481px–767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+    .Book_name_slider {
+        height: 45px;
+        margin: 0.8rem 5%;
+    }
+
+    .book_slider_box {
+        font-size: 14px;
+        animation-duration: 28s;
+    }
+}
+
+/* Medium devices (tablets 768px–1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .Book_name_slider {
+        height: 50px;
+        margin: 1rem 5%;
+    }
+
+    .book_slider_box {
+        font-size: 15px;
+        animation-duration: 30s;
+    }
+}
+
+/* Large devices (laptops 1024px–1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+    .Book_name_slider {
+        width: 85%;
+        margin: 1rem auto;
+    }
+
+    .book_slider_box {
+        font-size: 16px;
+    }
+}
+
+/* Extra large devices (desktops 1440px and above) */
+@media (min-width: 1440px) {
+    .Book_name_slider {
+        width: 80%;
+        height: 55px;
+        margin: 1.2rem auto;
+    }
+
+    .book_slider_box {
+        font-size: 18px;
+        animation-duration: 35s;
+    }
+}

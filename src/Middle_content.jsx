@@ -39,11 +39,11 @@ function Middle_content() {
             <div className="carousel-inner container">
                 {carouselItems.map((item, index) => (
                     <div key={item._id} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                        <img className="img-fluid" src={item.imagePath} alt={item.title} />
+                        <img className="img-fluid" src={item.imagePath} alt="Cisks_deparment_images" />
                     </div>
+                    
                 ))}
             </div>
-
             <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                 <span className="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span className="visually">Previous</span>

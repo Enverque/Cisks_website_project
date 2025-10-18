@@ -278,40 +278,42 @@ const refreshIssuedBooks = async () => {
             </button>
           </div>
 
-        <div className="searchCategory" >
-          <select value={searchCategory} onChange={(err) => setSearchCategory(err.target.value)}>
-            <option value="" disabled>Select a Category</option>
-            <option value="1">Category 1</option>
-            <option value="2">Category 2</option>
-            <option value="3">Category 3</option>
-            <option value="4">Category 4</option>
-            <option value="5">Category 5</option>
-            <option value="6">Category 6</option>
-            <option value="7">Category 7</option>
-            <option value="8">Category 8</option>
-            <option value="9">Category 9</option>
-            <option value="10">Category 10</option>
-            <option value="11">Category 11</option>
-            <option value="12">Category 12</option>
-            <option value="13">Category 13</option>
-            <option value="14">Category 14</option>
-            <option value="15">Category 15</option>
-            <option value="16">Category 16</option>
-            <option value="17">Category 17</option>
-          </select>
-        </div>
+        <div className="category_profile">
+            <div className="searchCategory" >
+              <select value={searchCategory} onChange={(err) => setSearchCategory(err.target.value)}>
+                <option value="" disabled>Select a Category</option>
+                <option value="1">Category 1</option>
+                <option value="2">Category 2</option>
+                <option value="3">Category 3</option>
+                <option value="4">Category 4</option>
+                <option value="5">Category 5</option>
+                <option value="6">Category 6</option>
+                <option value="7">Category 7</option>
+                <option value="8">Category 8</option>
+                <option value="9">Category 9</option>
+                <option value="10">Category 10</option>
+                <option value="11">Category 11</option>
+                <option value="12">Category 12</option>
+                <option value="13">Category 13</option>
+                <option value="14">Category 14</option>
+                <option value="15">Category 15</option>
+                <option value="16">Category 16</option>
+                <option value="17">Category 17</option>
+              </select>
+            </div>
 
-        <div className="User">
-          {localStorage.getItem("userLoggedIn") ? (
-            <NavLink onClick={handleLogout}>Logout</NavLink>
-          ) : (
-            <NavLink to="/Login">Login</NavLink>
-          )}
-          <NavLink to="/My_profile">
-            Profile
-          </NavLink>
+            <div className="User">
+              {localStorage.getItem("userLoggedIn") ? (
+                <NavLink onClick={handleLogout}>Logout</NavLink>
+              ) : (
+                <NavLink to="/Login">Login</NavLink>
+              )}
+              <NavLink to="/My_profile">
+                Profile
+              </NavLink>
+            </div>
+          </div>
         </div>
-      </div>
 
       <div className="book_list">
         {books.length > 0 &&

@@ -50,7 +50,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    background-color: #d4bf84;
+    background-color: #bbe5f7;
     min-height: 200px;
     height: auto;
     box-sizing: border-box;
@@ -63,7 +63,7 @@
     top: 0;
     width: 40px;
     height: 40px;
-    background-color: #d4bf84;
+    background-color: rgb(24, 96, 167);
     color: black;
     border-radius: 50%;
     z-index: 2;
@@ -97,7 +97,7 @@
     top: 0;
     width: 0;
     height: 0;
-    border-top: 15px solid #d4bf84;
+    border-top: 15px solid #fefefe;
     border-right: 15px solid transparent;
   }
   
@@ -108,7 +108,7 @@
     top: 0;
     width: 0;
     height: 0;
-    border-top: 15px solid #d4bf84;
+    border-top: 15px solid hsl(0, 0%, 100%);
     border-left: 15px solid transparent;
   }
   

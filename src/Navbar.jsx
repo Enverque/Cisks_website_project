@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "./Navbar.css";
@@ -8,9 +9,9 @@ function Navbar() {
     return(
         <>
                 <div className="header navbar-expand-lg">
-                        <a className="navbar-brand" href="#" id="Navbar_brand">
+                        <Link className="navbar-brand" to="/" id="Navbar_brand">
                             <img src="/img/CISKS_logo.jpg" alt="Cisks logo"/>
-                        </a>
+                        </Link>
 
                         <div className="middleheader">
                             <a style={{ color: '#a30000' }} href="#"> Center for Indian Scientific Knowledge Systems </a>

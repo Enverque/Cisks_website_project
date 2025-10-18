@@ -5,8 +5,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-
-
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -17,7 +15,6 @@ await connectDB();
 // Import middlewares
 import upload from './middleware/upload.js';
 import verifyAdmin from './middleware/adminAuth.js';
-
 
 // Import routes
 import issueBookRouter from './routes/issueBook.js';
@@ -35,6 +32,7 @@ import userBooksRouter from './routes/userBooks.js';
 import checkAuthRouter from './routes/checkAuth.js';
 import checkDueBooksRouter from './routes/checkDueBooks.js';
 import adminPanelRouter from './routes/adminPanel.js';
+import googleAuthRouter from './routes/googleAuth.js'; // ✅ NEW
 
 // Import models and utilities
 import transporter from './config/mailer.js';
@@ -48,21 +46,15 @@ import bcrypt from "bcryptjs";
 import cron from 'node-cron'; 
 import { v2 as cloudinary } from 'cloudinary';
 
-
-
 const app = express();
 const Port = process.env.PORT || 3000;  
 const JWT_SECRET = process.env.JWT_SECRET;
-// console.log("JWT_SECRET Main: ", JWT_SECRET);
-
-
-
 
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: "https://cisks.iiti.ac.in",
+  origin: ["https://cisks.iiti.ac.in", "http://localhost:5173"],
   methods: ["POST", "GET", "PUT", "DELETE"],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -73,39 +65,38 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // Static files
 app.use('/events', express.static(path.join(__dirname, '../public/events')));
 
-
 // Mount routers
 app.use('/api/latest-events', latestEventsRouter);
-app.use('/api/updated-events',updatedEventsRouter);
-app.use('/api/carousel-events',carouselEventsRouter);
+app.use('/api/updated-events', updatedEventsRouter);
+app.use('/api/carousel-events', carouselEventsRouter);
 app.use('/api/gallery-events', galleryEventsRouter);
 app.use("/api/program-events", programEventsRouter);
-app.use('/api/newbook-events',newbookEventsRouter);
-app.use('/api/booktitle-events',booktitleEventsRouter);
-app.use('/api/homeslider-events',homesliderEventsRouter);
+app.use('/api/newbook-events', newbookEventsRouter);
+app.use('/api/booktitle-events', booktitleEventsRouter);
+app.use('/api/homeslider-events', homesliderEventsRouter);
 app.use('/api/events', allEventsRouter);
-app.use("/api/Books_collection",booksCollectionRouter);
-app.use('/api/user',userBooksRouter);
-app.use('/api/check-auth',checkAuthRouter);
+app.use("/api/Books_collection", booksCollectionRouter);
+app.use('/api/user', userBooksRouter);
+app.use('/api/check-auth', checkAuthRouter);
 app.use('/api/verify-admin', verifyAdminRouter);
-app.use('/api/check-due-books',checkDueBooksRouter);
-app.use('/api/AdminPanel',adminPanelRouter);
+app.use('/api/check-due-books', checkDueBooksRouter);
+app.use('/api/AdminPanel', adminPanelRouter);
 app.use('/api/issueBook', issueBookRouter);
+app.use('/api/auth', googleAuthRouter); //  NEW Google Auth Route
 
 const Staticpath = path.join(__dirname, "../dist");
 app.use(express.static(Staticpath));
 
+// Error handling middleware
 app.use((err, req, res, next) => {
-  if (err instanceof multer.MulterError) {
+  console.error('Error:', err);
+  if (err.name === 'MulterError') {
     return res.status(400).json({ error: err.message });
-  } else if (err) {
-    return res.status(500).json({ error: err.message });
   }
-  next();
+  res.status(500).json({ error: err.message });
 });
 
 // Schedule the cron job to run every minute
@@ -119,26 +110,40 @@ cron.schedule('* * * * *', async () => {
   }
 });
 
+// Password validation function
+const validatePassword = (password) => {
+  const minLength = password.length >= 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  
+  return {
+    isValid: minLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar,
+    errors: { minLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecialChar }
+  };
+};
 
+// Domain validation function
+const isValidDomain = (email) => {
+  return email.toLowerCase().trim().endsWith('@iiti.ac.in');
+};
 
-
+// Events endpoints
 app.post('/api/events', upload.single('image'), async (req, res) => {
   try {
-    console.log("Cloudinary Upload Result:", req.file); // Check if path exists
     if (!req.file) throw new Error("No file received");
 
     const { title, content, category, date } = req.body;
-    const imagePath = req.file.path; // Cloudinary URL
+    const imagePath = req.file.path;
     const publicId = req.file.public_id;
-
-    console.log("Image URL:", imagePath); // Log the URL
 
     const newEvent = new Event({ 
       title, 
       content,
       category,
       date,
-      imagePath, // Ensure this is saved
+      imagePath,
       publicId
     });
 
@@ -146,7 +151,7 @@ app.post('/api/events', upload.single('image'), async (req, res) => {
     res.status(201).json({ 
       success: true,
       event: newEvent,
-      imageUrl: imagePath // Send back the URL
+      imageUrl: imagePath
     });
   } catch (error) {
     console.error("Upload Error:", error);
@@ -157,7 +162,6 @@ app.post('/api/events', upload.single('image'), async (req, res) => {
   }
 });
 
-
 app.delete('/api/events/:id', async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -166,7 +170,6 @@ app.delete('/api/events/:id', async (req, res) => {
       return res.status(404).json({ error: 'Event not found' });
     }
 
-    //Delete image from Cloudinary
     if (event.publicId) {
       try {
         await cloudinary.uploader.destroy(event.publicId);
@@ -184,8 +187,7 @@ app.delete('/api/events/:id', async (req, res) => {
   }
 });
 
-
-
+// OTP endpoints
 const otpStore = {};
 const generateOTP = () => Math.floor(1000 + Math.random() * 9000);
 
@@ -195,7 +197,10 @@ app.post("/api/send-otp", async (req, res) => {
     if (!email) return res.status(400).json({ error: "Email is required" });
 
     const otp = generateOTP();
-    otpStore[email] = otp;
+    otpStore[email] = { 
+      otp, 
+      expires: Date.now() + 10 * 60 * 1000 // 10 minutes
+    };
 
     const mailOptions = {
       from: `CISKS Library <${process.env.EMAIL_USER}>`,
@@ -219,7 +224,18 @@ app.post("/api/verify-otp", (req, res) => {
     const { email, otp } = req.body;
     if (!email || !otp) return res.status(400).json({ error: "Email and OTP are required" });
 
-    if (otpStore[email] && otpStore[email] == otp) {
+    const stored = otpStore[email];
+    
+    if (!stored) {
+      return res.status(400).json({ error: "No OTP found for this email" });
+    }
+    
+    if (Date.now() > stored.expires) {
+      delete otpStore[email];
+      return res.status(400).json({ error: "OTP has expired" });
+    }
+    
+    if (stored.otp == otp) {
       delete otpStore[email];
       res.json({ message: "OTP verified successfully!" });
     } else {
@@ -231,18 +247,56 @@ app.post("/api/verify-otp", (req, res) => {
   }
 });
 
-
-
+// Registration endpoint
 app.post("/api/Register", async (req, res) => {
   try {
     const { name, username, password } = req.body;
-    const trimmedUsername = username.trim();
+    
+    if (!name || !username || !password) {
+      return res.status(400).json({ Message: "All fields are required" });
+    }
+
+    if (!name.trim()) {
+      return res.status(400).json({ Message: "Name cannot be empty" });
+    }
+    
+    const trimmedUsername = username.trim().toLowerCase();
     const trimmedPassword = password.trim();
 
-    const existingUser = await Students.findOne({ username: trimmedUsername });
-    if (existingUser) return res.status(400).json({ Message: "User already exists" });
+    // Validate @iiti.ac.in domain
+    if (!isValidDomain(trimmedUsername)) {
+      return res.status(403).json({ 
+        Message: "Only @iiti.ac.in email addresses are allowed" 
+      });
+    }
 
-    const newUser = new Students({ name, username: trimmedUsername, password: trimmedPassword });
+    // Validate password strength
+    const passwordValidation = validatePassword(trimmedPassword);
+    if (!passwordValidation.isValid) {
+      const missingCriteria = [];
+      if (!passwordValidation.errors.minLength) missingCriteria.push("at least 8 characters");
+      if (!passwordValidation.errors.hasUpperCase) missingCriteria.push("one uppercase letter");
+      if (!passwordValidation.errors.hasLowerCase) missingCriteria.push("one lowercase letter");
+      if (!passwordValidation.errors.hasNumber) missingCriteria.push("one number");
+      if (!passwordValidation.errors.hasSpecialChar) missingCriteria.push("one special character");
+      
+      return res.status(400).json({ 
+        Message: `Password must contain: ${missingCriteria.join(", ")}`
+      });
+    }
+
+    const existingUser = await Students.findOne({ username: trimmedUsername });
+    if (existingUser) {
+      return res.status(400).json({ Message: "User already exists" });
+    }
+
+    const newUser = new Students({ 
+      name: name.trim(), 
+      username: trimmedUsername, 
+      password: trimmedPassword,
+      isGoogleAuth: false
+    });
+    
     await newUser.save();
     res.status(200).json({ Message: "Registered successfully!" });
   } catch (error) {
@@ -251,30 +305,53 @@ app.post("/api/Register", async (req, res) => {
   }
 });
 
+// Login endpoint
 app.post("/api/Login", async (req, res) => {
   try {
     const { username, password } = req.body;
+    
+    if (!username || !password) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+    
     const trimmedUsername = username.trim();
     const trimmedPassword = password.trim();
 
-    // Find user with case-insensitive search
+    // Validate @iiti.ac.in domain
+    if (!isValidDomain(trimmedUsername)) {
+      return res.status(403).json({ 
+        error: "Only @iiti.ac.in email addresses are allowed" 
+      });
+    }
+
     const user = await Students.findOne({ 
       username: { $regex: new RegExp(`^${trimmedUsername}$`, 'i') }
     });
     
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user.isGoogleAuth && !user.password) {
+      return res.status(400).json({ 
+        error: "This account uses Google Sign-In. Please login with Google." 
+      });
+    }
 
     const isMatch = await bcrypt.compare(trimmedPassword, user.password);
-    if (!isMatch) return res.status(401).json({ error: "Invalid password" });
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
 
-    // Determine expiration times based on admin status
-    const isAdmin = user.isAdmin;
-    const tokenExpiration = isAdmin ? '10m' : '30d'; // JWT expiration
-    const maxAge = isAdmin ? 10 * 60 * 1000 : 30 * 24 * 60 * 60 * 1000; // Cookie maxAge
+    user.lastLogin = new Date();
+    await user.save();
     
-    // Include isAdmin in the token payload
+    const isAdmin = user.isAdmin;
+    const tokenExpiration = isAdmin ? '10m' : '15d'; 
+    const maxAge = isAdmin ? 10 * 60 * 1000 : 15 * 24 * 60 * 60 * 1000; 
+    
     const token = jwt.sign(
-      { id: user._id, username: user.username,  isAdmin: user.isAdmin  },
+      { id: user._id, username: user.username, isAdmin: user.isAdmin },
       process.env.JWT_SECRET,
       { expiresIn: tokenExpiration }
     );
@@ -286,12 +363,11 @@ app.post("/api/Login", async (req, res) => {
       maxAge: maxAge,
     });
 
-    // Send admin status to frontend
     res.status(200).json({ 
       message: "Login successful!",
       isAdmin: user.isAdmin,
       redirectTo: user.isAdmin ? "/AdminPanel" : "/Books",
-      sessionDuration: isAdmin ? "10 minutes" : "30 days"
+      sessionDuration: isAdmin ? "10 minutes" : "15 days"
     });
     
   } catch (error) {
@@ -303,6 +379,7 @@ app.post("/api/Login", async (req, res) => {
   }
 });
 
+// Book issue endpoint
 app.post('/api/issueBook', async (req, res) => {
   try {
     const { userId, bookId } = req.body;
@@ -326,7 +403,7 @@ app.post('/api/issueBook', async (req, res) => {
     if (hasBook) return res.status(400).json({ error: 'Book already issued' });
 
     const issueDate = new Date();
-    const dueDate = new Date(issueDate.getTime() + 10 * 24 * 60 * 60 * 1000); // 10 din 
+    const dueDate = new Date(issueDate.getTime() + 10 * 24 * 60 * 60 * 1000);
 
     const bookData = {
       bookId: book._id,
@@ -361,20 +438,20 @@ app.post('/api/issueBook', async (req, res) => {
       message: 'Book issued successfully!',
       issuedBook: {
         ...bookData,
-        issueDate: issueDate.toDateString('en-GB'),
-        dueDate: dueDate.toDateString('en-GB'),
+        issueDate: issueDate.toDateString(),
+        dueDate: dueDate.toDateString(),
       }
     });
   } catch (error) {
-    console.error('Full error:', error);
+    console.error('Issue book error:', error);
     res.status(500).json({ 
       error: 'Internal Server Error',
-      details: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      details: error.message
     });
   }
 });
 
+// Return book endpoint
 app.post('/api/returnBook', async (req, res) => {
   try {
     const { userId, bookId } = req.body;
@@ -401,7 +478,7 @@ app.post('/api/returnBook', async (req, res) => {
     await IssueModel.findOneAndDelete({ userId, bookId });
 
     res.status(200).json({
-      message: 'Book returned successfully and removed from issuedBooks collection!',
+      message: 'Book returned successfully!',
       returnedBook: user.issuedBooks.find(b => b.bookId.toString() === bookId)
     });
   } catch (error) {
@@ -410,8 +487,7 @@ app.post('/api/returnBook', async (req, res) => {
   }
 });
 
-
-
+// Get user books
 app.get('/api/user/:userId/books', async (req, res) => {
   try {
     const user = await Students.findById(req.params.userId)
@@ -426,6 +502,7 @@ app.get('/api/user/:userId/books', async (req, res) => {
   }
 });
 
+// Logout endpoint
 app.post("/api/Logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
@@ -435,6 +512,7 @@ app.post("/api/Logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
+// Reset password endpoint
 app.post("/api/reset-password", async (req, res) => {
   try {
     const { email, newPassword } = req.body;
@@ -443,8 +521,21 @@ app.post("/api/reset-password", async (req, res) => {
       return res.status(400).json({ error: "All fields required" });
     }
 
+    const passwordValidation = validatePassword(newPassword.trim());
+    if (!passwordValidation.isValid) {
+      return res.status(400).json({ 
+        error: "Password must contain at least 8 characters, uppercase, lowercase, number, and special character" 
+      });
+    }
+
     const user = await Students.findOne({ username: email });
     if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (user.isGoogleAuth && !user.password) {
+      return res.status(400).json({ 
+        error: "This account uses Google Sign-In and cannot reset password this way" 
+      });
+    }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await Students.findByIdAndUpdate(user._id, { password: hashedPassword });
@@ -456,10 +547,10 @@ app.post("/api/reset-password", async (req, res) => {
   }
 });
 
+// Catch-all route for SPA
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
-
 
 app.listen(Port, () => {
   console.log(`Server running on port ${Port}`);

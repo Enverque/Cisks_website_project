@@ -12,7 +12,7 @@ function My_profile() {
   const fetchIssuedBooks = async () => {
     try {
       if (!userId) {
-        toast.error("Please log in to view issued books");
+        toast.error("Please SignIn to view issued books");
         setLoading(false);
         return;
       }
@@ -22,15 +22,19 @@ function My_profile() {
       if (!response.ok) {
         const errorData = await response.json();
         toast.error(errorData.error || 'Failed to fetch books');
+        setError(errorData.error || 'Failed to fetch books');
+        setLoading(false);
+        return;  // ✅ Add return
       }
 
       const data = await response.json();
       // Filter out returned books
       const activeBooks = data.filter(book => !book.returned);
       setIssuedBooks(activeBooks);
-      toast.error(null);
+      setError(null);
     } catch (error) {
       console.error("Fetch error:", error);
+      setError(error.message);
       toast.error(error.message);
     } finally {
       setLoading(false);
@@ -54,9 +58,11 @@ function My_profile() {
       if (!response.ok) {
         const errorData = await response.json();
         toast.error(errorData.error || 'Failed to return book');
+        return;
       }
 
       // Refresh the list after successful return
+      const result = await response.json();
       await fetchIssuedBooks();
       toast.success('Book returned successfully!');
     } catch (error) {
@@ -79,6 +85,9 @@ function My_profile() {
     return (
       <div className="my-profile container">
         <div className="error-message">{error}</div>
+        <button onClick={() => window.history.back()} className="back-button">
+          Go Back
+        </button>
       </div>
     );
   }
@@ -94,7 +103,7 @@ function My_profile() {
              Back
         </button>
     </div>
-      <h2 className="Profile_issued_book">My Issued Books</h2>
+      <h2 className="Profile_issued_book">Issued Books</h2>
       
 
       {issuedBooks.length === 0 ? (

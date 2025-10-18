@@ -222,6 +222,9 @@ h1 {
   .Issue {
     justify-content: center;
   }
+  .User{
+    margin-top: 2rem ;
+  }
 
   .middlepart {
     flex-direction: column;
@@ -254,7 +257,6 @@ h1 {
     padding: 0 2rem;
     justify-content: center;
   }
-
   .content {
     max-width: 600px;
   }
@@ -266,6 +268,10 @@ h1 {
   .middlepart img {
     max-width: 400px;
     margin-top: -4rem;
+  }
+  .User{
+    margin-top: 2rem;
+    margin: 2rem 5rem;
   }
 }
 
@@ -315,6 +321,11 @@ h1 {
     padding-right: 4rem;
   }
 }
+.category_profile{
+  display: flex;
+  gap: 2.5rem;
+  align-items: baseline;
+}
 
 /* Extra Small Devices */
 @media (max-width: 480px) {
@@ -348,6 +359,7 @@ h1 {
     flex-direction: column; /* stack vertically */
     max-width: 100%;
     width: 100%;
+    margin-top: 1rem;
   }
   .loginLogoutBtn {
     width: 100%;

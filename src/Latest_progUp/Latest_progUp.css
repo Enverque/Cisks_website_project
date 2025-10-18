@@ -1,50 +1,86 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .Latest_progUp_slider {
-    position: relative;
-    width: 100%; 
-    height: 50px;
-    overflow: hidden;
-    background: #1c9ea2;
-    cursor: pointer; /* Optional: makes the slider interactive */
+  position: relative;
+  width: 100%;
+  height: 50px;
+  overflow: hidden;
+  background: #bbe1a8;
+  cursor: pointer;
 }
 
 .Latest_progUp_center {
-    display: flex;
-    flex-direction: row; /* Arrange content in a row */
-    width: 100%; /* Ensure the width is full */
-    animation: slideBook 20s infinite linear;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  animation: slideBook 20s infinite linear;
 }
 
 .Latest_progUp_box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    padding: 5px 25px;
-    font-size: 17px;
-    white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(2, 27, 65);
+  padding: 5px 25px;
+  font-size: 17px;
+  white-space: nowrap;
 }
 
 .Latest_progUp_slider:hover .Latest_progUp_center {
-    animation-play-state: paused; /* Pause the animation when hovering over the slider */
+  animation-play-state: paused;
 }
 
 @keyframes slideBook {
-    0% {
-        transform: translateX(-20%); /* Start just off the screen to the left */
-        opacity: 1;
-    }
-    50% {
-        transform: translateX(0); /* Move to the center */
-        opacity: 1;
-    }
-    100% {
-        transform: translateX(100%); /* Move completely off the screen to the right */
-        opacity: 1;
-    }
+  0% {
+    transform: translateX(-20%);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+}
+
+/* ✅ Responsive font and spacing adjustments */
+@media (max-width: 1200px) {
+  .Latest_progUp_box {
+    font-size: 16px;
+    padding: 5px 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  .Latest_progUp_box {
+    font-size: 15px;
+    padding: 5px 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .Latest_progUp_box {
+    font-size: 14px;
+    padding: 4px 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .Latest_progUp_box {
+    font-size: 13px;
+    padding: 4px 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .Latest_progUp_box {
+    font-size: 12px;
+    padding: 3px 10px;
+  }
 }

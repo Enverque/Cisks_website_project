@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 function LibraryBook() {
   const [books, setBooks] = useState([]); 
 
-  // Fetch books from the backend API when the component mounts
+
   useEffect(() => {
     const fetchBooks = async () => {
       try {

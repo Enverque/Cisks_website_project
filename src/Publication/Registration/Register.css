@@ -1,92 +1,340 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-.Registration h2 {
-    margin-top: 3rem;
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
+
+/* Main container */
+.Registration.container {
+    max-width: 420px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
-.Userdetail, .Userpassword {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    margin-bottom: 15px;
+/* Heading */
+.Registration h2 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-align: center;
+    letter-spacing: -0.5px;
 }
+
+/* Form groups */
+.Userdetail, 
+.Userpassword,
 .Username {
     display: flex;
     flex-direction: column;
-    text-align: left;
-    margin-bottom: 15px;
+    margin-bottom: 1.5rem;
 }
 
-label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
+/* Labels */
+.Userdetail label,
+.Userpassword label,
+.Username label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2d2d2d;
+    letter-spacing: 0.2px;
 }
 
-input {
+/* Input fields */
+.Userdetail input,
+.Userpassword input,
+.Username input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 18px;
+    padding: 13px 16px;
+    border: 2px solid #e5e5e5;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: 400;
+    color: #1a1a1a;
+    background: #fafafa;
+    transition: all 0.3s ease;
 }
 
+.Userdetail input:focus,
+.Userpassword input:focus,
+.Username input:focus {
+    outline: none;
+    border-color: #6a11cb;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.1);
+}
+
+.Userdetail input:disabled,
+.Userpassword input:disabled,
+.Username input:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.Userdetail input::placeholder,
+.Userpassword input::placeholder,
+.Username input::placeholder {
+    color: #999;
+}
+
+/* Domain hint */
+.domain-hint {
+    font-size: 12px;
+    color: #666;
+    margin-top: 0.25rem;
+    font-style: italic;
+}
+
+/* Password requirements container */
+.password-requirements {
+    margin-top: 0.75rem;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+}
+
+.requirements-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.requirements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.requirements-list li {
+    font-size: 13px;
+    padding: 0.25rem 0;
+    transition: color 0.3s ease;
+}
+
+.requirements-list li.valid {
+    color: #2ecc71;
+    font-weight: 500;
+}
+
+.requirements-list li.invalid {
+    color: #e74c3c;
+}
+
+/* Register button */
 .Register-btn {
     width: 100%;
-    padding: 10px;
-    background-color: #6a11cb;
+    padding: 14px;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
     color: white;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 600;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
 }
 
-.Register-btn:hover {
-    background-color: #4a0ca3;
+.Register-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
 }
 
-.Register{
+.Register-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.Register-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    background: #ccc;
+}
+
+/* Divider */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.divider span {
+    padding: 0 1rem;
+    font-size: 13px;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Google signup wrapper */
+.google-login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1.5rem 0;
+    width: 100%;
+}
+
+.google-login-wrapper > div {
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+}
+
+.google-login-wrapper > div > div {
+    width: 100% !important;
+}
+
+/* Register link */
+.Register {
     display: block;
-    margin-top: 10px;
+    text-align: center;
+    margin-top: 1.25rem;
     color: #6a11cb;
     text-decoration: none;
     font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
+.Register:hover {
+    color: #4a0ca3;
+    text-decoration: underline;
+}
 
+/* Back button container */
+.back-button-container {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.back-button {
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #e5e5e5;
+    background-color: #fafafa;
+    color: #666;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover:not(:disabled) {
+    background-color: #f0f0f0;
+    border-color: #d0d0d0;
+    color: #333;
+}
+
+.back-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
-    .Registration {
-        width: 90%;
-        max-width: 350px;
+    .Registration.container {
+        margin: 1.5rem auto;
+        padding: 2rem;
+        max-width: 90%;
+    }
+
+    .Registration h2 {
+        font-size: 24px;
+    }
+
+    .google-login-wrapper {
+        padding: 0;
+    }
+
+    .password-requirements {
+        padding: 10px;
+    }
+
+    .requirements-list li {
+        font-size: 12px;
     }
 }
 
 @media (max-width: 480px) {
-    .Registration {
-        width: 90%;
-        max-width: 300px;
-        padding: 15px;
+    .Registration.container {
+        margin: 1rem;
+        padding: 1.5rem;
+        border-radius: 12px;
     }
 
     .Registration h2 {
-        font-size: 20px;
+        font-size: 22px;
+        margin-bottom: 1.5rem;
     }
 
-    input {
+    .Userdetail input,
+    .Userpassword input,
+    .Username input {
+        padding: 12px 14px;
         font-size: 14px;
+    }
+
+    .Register-btn {
+        padding: 13px;
+        font-size: 15px;
+    }
+
+    .divider {
+        margin: 1.25rem 0;
+    }
+
+    .divider span {
+        font-size: 12px;
+        padding: 0 0.75rem;
+    }
+
+    .Register {
+        font-size: 13px;
+    }
+
+    .password-requirements {
         padding: 8px;
     }
 
-    .Registration-btn {
-        font-size: 16px;
+    .requirements-title {
+        font-size: 12px;
     }
+
+    .requirements-list li {
+        font-size: 11px;
+    }
+}
+
+/* Loading state animation */
+.Register-btn:disabled {
+    position: relative;
+}
+
+/* Focus visible for accessibility */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+    outline: 2px solid #6a11cb;
+    outline-offset: 2px;
 }

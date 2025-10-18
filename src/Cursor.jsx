@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Cursor.css'; // Ensure you have the CSS for styles
+import './Cursor.css'; 
 
 function Cursor() {
   const [letters, setLetters] = useState([]);
