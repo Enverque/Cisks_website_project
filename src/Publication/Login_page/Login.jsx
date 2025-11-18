@@ -48,13 +48,13 @@ function Login() {
 
     // Validate based on role
     if (role === "student" && !isValidStudentId(username)) {
-      toast.error("Invalid student ID format. Format: prefix123456@iiti.ac.in");
+      toast.error("Invalid student ID format.");
       setIsLoading(false);
       return;
     }
 
     if (role === "admin" && !isValidAdminEmail(username)) {
-      toast.error("Invalid admin email format. Format: name@iiti.ac.in");
+      toast.error("Invalid admin email format");
       setIsLoading(false);
       return;
     }
