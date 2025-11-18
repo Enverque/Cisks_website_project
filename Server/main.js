@@ -452,7 +452,7 @@ app.post("/api/Login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "None",
       maxAge: maxAge,
     });
 

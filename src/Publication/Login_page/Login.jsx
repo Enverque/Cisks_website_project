@@ -113,7 +113,7 @@ function Login() {
       const decoded = jwtDecode(credentialResponse.credential);
       
       if (!isValidDomain(decoded.email)) {
-        toast.error("Only @iiti.ac.in email addresses are allowed");
+        toast.error("Only institute email addresses are allowed");
         setIsLoading(false);
         return;
       }
