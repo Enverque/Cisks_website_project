@@ -8,6 +8,7 @@ import "./Login.css";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("student"); // student or admin
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -17,6 +18,19 @@ function Login() {
   const queryParams = new URLSearchParams(location.search);
   const autoIssueBookId = queryParams.get("autoIssue");
 
+  // Validate student ID format: prefix_digits@iiti.ac.in
+  const isValidStudentId = (email) => {
+    const studentIdPattern = /^[a-z]+\d+@iiti\.ac\.in$/i;
+    return studentIdPattern.test(email.toLowerCase().trim());
+  };
+
+  // Validate admin email format: simple name@iiti.ac.in (no digits after prefix)
+  const isValidAdminEmail = (email) => {
+    const adminEmailPattern = /^[a-z]+@iiti\.ac\.in$/i;
+    return adminEmailPattern.test(email.toLowerCase().trim());
+  };
+
+  // General domain validation
   const isValidDomain = (email) => {
     return email.toLowerCase().trim().endsWith('@iiti.ac.in');
   };
@@ -25,8 +39,22 @@ function Login() {
     e.preventDefault();
     setIsLoading(true);
     
+    // Validate domain
     if (!isValidDomain(username)) {
-      toast.error("Only Institute email addresses are allowed");
+      toast.error("Only @iiti.ac.in email addresses are allowed");
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate based on role
+    if (role === "student" && !isValidStudentId(username)) {
+      toast.error("Invalid student ID format. Format: prefix123456@iiti.ac.in");
+      setIsLoading(false);
+      return;
+    }
+
+    if (role === "admin" && !isValidAdminEmail(username)) {
+      toast.error("Invalid admin email format. Format: name@iiti.ac.in");
       setIsLoading(false);
       return;
     }
@@ -35,7 +63,7 @@ function Login() {
       const res = await fetch(`${API_BASE}/api/Login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, role }),
         credentials: 'include'
       });
   
@@ -44,19 +72,30 @@ function Login() {
       if (res.ok) {
         toast.success("Login successful!");
         
-        if (data.isAdmin) {
-          navigate('/AdminPanel');
+        // Redirect based on role
+        if (data.role === 'admin') {
+          navigate('/AdminDashboard');
         } else {
-          navigate(autoIssueBookId ? `/BOOKS?autoIssue=${autoIssueBookId}` : '/BOOKS');
+          navigate(autoIssueBookId ? `/StudentDashboard?autoIssue=${autoIssueBookId}` : '/StudentDashboard');
         }
       } else {
-        if (res.status === 404 || data.error?.toLowerCase().includes("user not found")) {
+        // Handle specific error cases
+        if (data.error?.includes("locked")) {
+          toast.error(data.error);
+        } else if (data.error?.includes("role mismatch")) {
+          toast.error(data.error);
+        } else if (res.status === 404 || data.error?.toLowerCase().includes("user not found")) {
           toast.error("User not found! Please register first.");
           setTimeout(() => navigate("/Register"), 2000);
         } else if (data.error?.includes("Google Sign-In")) {
           toast.error(data.error);
         } else {
           toast.error(data.error || "Login failed");
+          
+          // Show remaining attempts if available
+          if (data.attemptsLeft !== undefined) {
+            toast.warning(`${data.attemptsLeft} attempts remaining`);
+          }
         }
       }
     } catch (err) {
@@ -78,6 +117,19 @@ function Login() {
         setIsLoading(false);
         return;
       }
+
+      // Validate based on selected role
+      if (role === "student" && !isValidStudentId(decoded.email)) {
+        toast.error("This Google account is not a valid student ID");
+        setIsLoading(false);
+        return;
+      }
+
+      if (role === "admin" && !isValidAdminEmail(decoded.email)) {
+        toast.error("This Google account is not a valid admin email");
+        setIsLoading(false);
+        return;
+      }
       
       const res = await fetch(`${API_BASE}/api/auth/google`, {
         method: "POST",
@@ -86,7 +138,8 @@ function Login() {
           token: credentialResponse.credential,
           email: decoded.email,
           name: decoded.name,
-          picture: decoded.picture
+          picture: decoded.picture,
+          role: role
         }),
         credentials: 'include'
       });
@@ -96,10 +149,10 @@ function Login() {
       if (res.ok) {
         toast.success(`Welcome ${data.name}!`);
         
-        if (data.isAdmin) {
-          navigate('/AdminPanel');
+        if (data.role === 'admin') {
+          navigate('/AdminDashboard');
         } else {
-          navigate(autoIssueBookId ? `/BOOKS?autoIssue=${autoIssueBookId}` : '/BOOKS');
+          navigate(autoIssueBookId ? `/StudentDashboard?autoIssue=${autoIssueBookId}` : '/StudentDashboard');
         }
       } else {
         toast.error(data.error || "Google login failed");
@@ -118,16 +171,45 @@ function Login() {
 
   return (
     <div className="login container">
-      <h2>Login</h2>
+      <h2>Login as :</h2>
+      
+      {/* Role Selection */}
+      <div className="role-selection">
+        <div className="role-buttons">
+          <button
+            type="button"
+            className={`role-btn ${role === 'student' ? 'active' : ''}`}
+            onClick={() => setRole('student')}
+            disabled={isLoading}
+          >
+            Student
+          </button>
+          <button
+            type="button"
+            className={`role-btn ${role === 'admin' ? 'active' : ''}`}
+            onClick={() => setRole('admin')}
+            disabled={isLoading}
+          >
+            Admin
+          </button>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit}>
         <div className="Userdetail">
-          <label htmlFor="username">Institute Email</label>
+          <label htmlFor="username">
+            {role === 'student' ? 'Student ID' : 'Admin Email'}
+          </label>
           <input
             type="email"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             id="username"
-            placeholder="xyz@iiti.ac.in"
+            placeholder={
+              role === 'student' 
+                ? 'Enter your Institute email' 
+                : 'Enter Admin Id'
+            }
             name="username"
             required
             disabled={isLoading}

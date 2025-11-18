@@ -15,7 +15,7 @@
     align-items: center;
     width: 100%;
     max-width: 100%;
-    background-color: #98b5c6 !important;
+    background-color: #0fa3c0 !important;
     font-weight: 700;
     padding: 0 5vw;
     height: 8vh;
@@ -121,7 +121,7 @@
     }
     
     .nav-item.dropdown:hover .nav-link.dropdown-toggle {
-        background-color: rgba(76, 175, 80, 0.8) !important;
+        background-color: rgba(24, 39, 105, 0.8) !important;
         color: rgb(255, 255, 255) !important;
         border-radius: 1rem;
     }

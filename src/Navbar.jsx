@@ -14,8 +14,8 @@ function Navbar() {
                         </Link>
 
                         <div className="middleheader">
-                            <a style={{ color: '#a30000' }} href="#"> Center for Indian Scientific Knowledge Systems </a>
-                            <p style={{ color: '#052555' }}>Indian Institute of Technology Indore</p>
+                            <a style={{ color: '#8000ffff' }} href="https://www.iiti.ac.in/"> Center for Indian Scientific Knowledge Systems </a>
+                            <p style={{ color: '#ea08e6ff' }}>Indian Institute of Technology Indore</p>
                         </div>
     
                         <a href="https://www.iiti.ac.in/">

@@ -129,6 +129,16 @@ const isValidDomain = (email) => {
   return email.toLowerCase().trim().endsWith('@iiti.ac.in');
 };
 
+const isValidStudentId = (email) => {
+  const studentIdPattern = /^[a-z]+\d+@iiti\.ac\.in$/i;
+  return studentIdPattern.test(email.toLowerCase().trim());
+};
+
+const isValidAdminEmail = (email) => {
+  const adminEmailPattern = /^[a-z]+@iiti\.ac\.in$/i;
+  return adminEmailPattern.test(email.toLowerCase().trim());
+};
+
 // Events endpoints
 app.post('/api/events', upload.single('image'), async (req, res) => {
   try {
@@ -248,16 +258,22 @@ app.post("/api/verify-otp", (req, res) => {
 });
 
 // Registration endpoint
+// Add this to your main.js - Replace the existing /api/Register endpoint
+
 app.post("/api/Register", async (req, res) => {
   try {
-    const { name, username, password } = req.body;
+    const { name, username, password, role } = req.body;
     
-    if (!name || !username || !password) {
+    if (!name || !username || !password || !role) {
       return res.status(400).json({ Message: "All fields are required" });
     }
 
     if (!name.trim()) {
       return res.status(400).json({ Message: "Name cannot be empty" });
+    }
+
+    if (!['student', 'admin'].includes(role)) {
+      return res.status(400).json({ Message: "Invalid role. Must be 'student' or 'admin'" });
     }
     
     const trimmedUsername = username.trim().toLowerCase();
@@ -267,6 +283,19 @@ app.post("/api/Register", async (req, res) => {
     if (!isValidDomain(trimmedUsername)) {
       return res.status(403).json({ 
         Message: "Only @iiti.ac.in email addresses are allowed" 
+      });
+    }
+
+    // Validate format based on role
+    if (role === 'student' && !isValidStudentId(trimmedUsername)) {
+      return res.status(400).json({ 
+        Message: "Invalid student ID format. Student IDs must contain letters followed by digits (e.g., che230008016@iiti.ac.in)" 
+      });
+    }
+
+    if (role === 'admin' && !isValidAdminEmail(trimmedUsername)) {
+      return res.status(400).json({ 
+        Message: "Invalid admin email format. Admin emails must contain only letters before @ (e.g., admin@iiti.ac.in)" 
       });
     }
 
@@ -287,14 +316,18 @@ app.post("/api/Register", async (req, res) => {
 
     const existingUser = await Students.findOne({ username: trimmedUsername });
     if (existingUser) {
-      return res.status(400).json({ Message: "User already exists" });
+      return res.status(400).json({ Message: "User already exists with this email" });
     }
 
     const newUser = new Students({ 
       name: name.trim(), 
       username: trimmedUsername, 
       password: trimmedPassword,
-      isGoogleAuth: false
+      role: role,
+      isAdmin: role === 'admin',
+      isGoogleAuth: false,
+      loginAttempts: 0,
+      lockUntil: null
     });
     
     await newUser.save();
@@ -308,9 +341,9 @@ app.post("/api/Register", async (req, res) => {
 // Login endpoint
 app.post("/api/Login", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
     
-    if (!username || !password) {
+    if (!username || !password || !role) {
       return res.status(400).json({ error: "All fields are required" });
     }
     
@@ -324,6 +357,20 @@ app.post("/api/Login", async (req, res) => {
       });
     }
 
+    // Validate format based on role
+    if (role === 'student' && !isValidStudentId(trimmedUsername)) {
+      return res.status(400).json({ 
+        error: "Invalid student ID format. Use: prefix + digits (e.g., che230008016@iiti.ac.in)" 
+      });
+    }
+
+    if (role === 'admin' && !isValidAdminEmail(trimmedUsername)) {
+      return res.status(400).json({ 
+        error: "Invalid admin email format. Use: name only (e.g., admin@iiti.ac.in)" 
+      });
+    }
+
+    // Find user
     const user = await Students.findOne({ 
       username: { $regex: new RegExp(`^${trimmedUsername}$`, 'i') }
     });
@@ -332,26 +379,72 @@ app.post("/api/Login", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // Check if account is locked
+    if (user.isLocked) {
+      const lockTimeRemaining = Math.ceil((user.lockUntil - Date.now()) / (1000 * 60 * 60));
+      return res.status(423).json({ 
+        error: `Account is locked due to too many failed login attempts. Try again in ${lockTimeRemaining} hours.` 
+      });
+    }
+
+    // Verify role matches
+    if (user.role !== role) {
+      // Increment attempts for role mismatch too
+      await user.incLoginAttempts();
+      return res.status(403).json({ 
+        error: `This account is registered as ${user.role}, not ${role}. Please select the correct role.` 
+      });
+    }
+
+    // Check if user registered with Google
     if (user.isGoogleAuth && !user.password) {
       return res.status(400).json({ 
         error: "This account uses Google Sign-In. Please login with Google." 
       });
     }
 
+    // Verify password
     const isMatch = await bcrypt.compare(trimmedPassword, user.password);
     if (!isMatch) {
-      return res.status(401).json({ error: "Invalid password" });
+      // Increment login attempts
+      await user.incLoginAttempts();
+      
+      // Calculate remaining attempts
+      const attemptsLeft = 5 - (user.loginAttempts + 1);
+      
+      if (attemptsLeft <= 0) {
+        return res.status(401).json({ 
+          error: "Too many failed attempts. Your account has been locked for 7 hours.",
+          attemptsLeft: 0
+        });
+      }
+      
+      return res.status(401).json({ 
+        error: "Invalid password",
+        attemptsLeft: attemptsLeft
+      });
     }
 
+    // Password is correct - reset login attempts
+    if (user.loginAttempts > 0 || user.lockUntil) {
+      await user.resetLoginAttempts();
+    }
+
+    // Update last login
     user.lastLogin = new Date();
     await user.save();
     
-    const isAdmin = user.isAdmin;
+    const isAdmin = user.role === 'admin';
     const tokenExpiration = isAdmin ? '10m' : '15d'; 
     const maxAge = isAdmin ? 10 * 60 * 1000 : 15 * 24 * 60 * 60 * 1000; 
     
     const token = jwt.sign(
-      { id: user._id, username: user.username, isAdmin: user.isAdmin },
+      { 
+        id: user._id, 
+        username: user.username, 
+        role: user.role,
+        isAdmin: isAdmin 
+      },
       process.env.JWT_SECRET,
       { expiresIn: tokenExpiration }
     );
@@ -365,8 +458,9 @@ app.post("/api/Login", async (req, res) => {
 
     res.status(200).json({ 
       message: "Login successful!",
-      isAdmin: user.isAdmin,
-      redirectTo: user.isAdmin ? "/AdminPanel" : "/Books",
+      role: user.role,
+      isAdmin: isAdmin,
+      redirectTo: isAdmin ? "/AdminDashboard" : "/StudentDashboard",
       sessionDuration: isAdmin ? "10 minutes" : "15 days"
     });
     

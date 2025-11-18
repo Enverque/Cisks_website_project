@@ -10,6 +10,7 @@ function Register() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [role, setRole] = useState("student");
   const [formdata, setFormdata] = useState({
     name: "",
     username: "",
@@ -44,6 +45,18 @@ function Register() {
     return email.toLowerCase().trim().endsWith('@iiti.ac.in');
   };
 
+  // Validate student ID format
+  const isValidStudentId = (email) => {
+    const studentIdPattern = /^[a-z]+\d+@iiti\.ac\.in$/i;
+    return studentIdPattern.test(email.toLowerCase().trim());
+  };
+
+  // Validate admin email format
+  const isValidAdminEmail = (email) => {
+    const adminEmailPattern = /^[a-z]+@iiti\.ac\.in$/i;
+    return adminEmailPattern.test(email.toLowerCase().trim());
+  };
+
   const handlechange = (e) => {
     const { name, value } = e.target;
     setFormdata((prevData) => ({
@@ -67,7 +80,20 @@ function Register() {
     }
 
     if (!isValidDomain(formdata.username)) {
-      toast.error("Only Institute email addresses are allowed");
+      toast.error("Only @iiti.ac.in email addresses are allowed");
+      setIsLoading(false);
+      return;
+    }
+
+    // Validate based on role
+    if (role === "student" && !isValidStudentId(formdata.username)) {
+      toast.error("Invalid student ID format. Use: prefix + digits (e.g., che230008016@iiti.ac.in)");
+      setIsLoading(false);
+      return;
+    }
+
+    if (role === "admin" && !isValidAdminEmail(formdata.username)) {
+      toast.error("Invalid admin email format. Use: name only (e.g., admin@iiti.ac.in)");
       setIsLoading(false);
       return;
     }
@@ -80,7 +106,10 @@ function Register() {
     }
 
     try {
-      const response = await axios.post(`${API_BASE}/api/Register`, formdata);
+      const response = await axios.post(`${API_BASE}/api/Register`, {
+        ...formdata,
+        role: role
+      });
 
       if (response.status === 200 || response.status === 201) {
         toast.success("Registered successfully! Redirecting to login...");
@@ -105,7 +134,20 @@ function Register() {
       const decoded = jwtDecode(credentialResponse.credential);
       
       if (!isValidDomain(decoded.email)) {
-        toast.error("Only Institute email addresses are allowed");
+        toast.error("Only @iiti.ac.in email addresses are allowed");
+        setIsLoading(false);
+        return;
+      }
+
+      // Validate based on selected role
+      if (role === "student" && !isValidStudentId(decoded.email)) {
+        toast.error("This Google account is not a valid student ID");
+        setIsLoading(false);
+        return;
+      }
+
+      if (role === "admin" && !isValidAdminEmail(decoded.email)) {
+        toast.error("This Google account is not a valid admin email");
         setIsLoading(false);
         return;
       }
@@ -117,7 +159,8 @@ function Register() {
           token: credentialResponse.credential,
           email: decoded.email,
           name: decoded.name,
-          picture: decoded.picture
+          picture: decoded.picture,
+          role: role
         }),
         credentials: 'include'
       });
@@ -127,10 +170,10 @@ function Register() {
       if (res.ok) {
         toast.success(`Welcome ${data.name}!`);
         setTimeout(() => {
-          if (data.isAdmin) {
-            navigate('/AdminPanel');
+          if (data.role === 'admin') {
+            navigate('/AdminDashboard');
           } else {
-            navigate('/BOOKS');
+            navigate('/StudentDashboard');
           }
         }, 1500);
       } else {
@@ -150,8 +193,30 @@ function Register() {
 
   return (
     <div className="Registration container">
-      <h2>Registration</h2>
+      <h2>Register as:</h2>
       
+      {/* Role Selection */}
+      <div className="role-selection">
+        <div className="role-buttons">
+          <button
+            type="button"
+            className={`role-btn ${role === 'student' ? 'active' : ''}`}
+            onClick={() => setRole('student')}
+            disabled={isLoading}
+          >
+            Student
+          </button>
+          <button
+            type="button"
+            className={`role-btn ${role === 'admin' ? 'active' : ''}`}
+            onClick={() => setRole('admin')}
+            disabled={isLoading}
+          >
+            Admin
+          </button>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit}>
         <div className="Userdetail">
           <label htmlFor="name">Name</label> 
@@ -168,17 +233,28 @@ function Register() {
         </div>
 
         <div className="Userdetail">
-          <label htmlFor="username">Institute Email</label>
+          <label htmlFor="username">
+            {role === 'student' ? 'Student ID' : 'Admin Email'}
+          </label>
           <input
             type="email"
             id="username"
             value={formdata.username}
             onChange={handlechange}
-            placeholder="abc@iiti.ac.in"
+            placeholder={
+              role === 'student' 
+                ? 'Enter your Institute Id' 
+                : 'Enter Admin Id'
+            }
             name="username"
             disabled={isLoading}
             required
           />
+          <span className="input-hint">
+            {role === 'student' 
+              ? 'please register with your Institute Id' 
+              : 'please Enter Admin Id'}
+          </span>
         </div>
 
         <div className="Userpassword">

@@ -43,15 +43,20 @@ const studentSchema = new mongoose.Schema({
   password: { 
     type: String, 
     required: function() {
-      // Password required only if not using Google auth
       return !this.isGoogleAuth;
     }
+  },
+  // Role: student or admin
+  role: {
+    type: String,
+    enum: ['student', 'admin'],
+    default: 'student'
   },
   // Google OAuth fields
   googleId: {
     type: String,
     unique: true,
-    sparse: true // Allows null values to be non-unique
+    sparse: true
   },
   profilePicture: {
     type: String,
@@ -64,6 +69,15 @@ const studentSchema = new mongoose.Schema({
   isVerified: {
     type: Boolean,
     default: false
+  },
+  // Login attempt tracking
+  loginAttempts: {
+    type: Number,
+    default: 0
+  },
+  lockUntil: {
+    type: Date,
+    default: null
   },
   // Existing fields
   issuedBooks: [issuedBookSchema],
@@ -81,7 +95,12 @@ const studentSchema = new mongoose.Schema({
   }
 });
 
-// Hash password before saving (only for non-Google users)
+// Virtual for checking if account is locked
+studentSchema.virtual('isLocked').get(function() {
+  return !!(this.lockUntil && this.lockUntil > Date.now());
+});
+
+// Hash password before saving
 studentSchema.pre("save", async function (next) {
   if (!this.isModified("password") || !this.password) {
     return next();
@@ -95,10 +114,42 @@ studentSchema.pre("save", async function (next) {
   }
 });
 
+// Method to increment login attempts
+studentSchema.methods.incLoginAttempts = function() {
+  // If we have a previous lock that has expired, reset attempts
+  if (this.lockUntil && this.lockUntil < Date.now()) {
+    return this.updateOne({
+      $set: { loginAttempts: 1 },
+      $unset: { lockUntil: 1 }
+    });
+  }
+  
+  // Otherwise increment attempts
+  const updates = { $inc: { loginAttempts: 1 } };
+  
+  // Lock account after 5 failed attempts for 7 hours
+  const maxAttempts = 5;
+  const lockTime = 7 * 60 * 60 * 1000; // 7 hours in milliseconds
+  
+  if (this.loginAttempts + 1 >= maxAttempts && !this.isLocked) {
+    updates.$set = { lockUntil: Date.now() + lockTime };
+  }
+  
+  return this.updateOne(updates);
+};
+
+// Method to reset login attempts on successful login
+studentSchema.methods.resetLoginAttempts = function() {
+  return this.updateOne({
+    $set: { loginAttempts: 0 },
+    $unset: { lockUntil: 1 }
+  });
+};
+
 // Method to compare passwords
 studentSchema.methods.comparePassword = async function(candidatePassword) {
   if (!this.password) {
-    return false; // Google auth users don't have passwords
+    return false;
   }
   return await bcrypt.compare(candidatePassword, this.password);
 };

@@ -42,26 +42,27 @@
   
   /* Only first image shows welcome text */
   .carousel-item:first-child::after {
-    content: "WELCOME TO CISKS";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 5rem;
-    font-weight: bold;
-    color: rgb(220, 79, 223);
-    white-space: nowrap;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
-    z-index: 2;
-    overflow: hidden;
-    border-right: 0.15em solid rgb(132, 190, 205);
-    animation:
-      typing 3s steps(18, end),
-      blink-caret 0.75s step-end infinite,
-      fadeOutText 0.5s ease-out 3s forwards;
-    pointer-events: none;
-  }
-  
+  content: "WELCOME TO CISKS";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(1.8rem, 6vw, 5rem); /* Dynamically resizes across screens */
+  font-weight: 700;
+  color: rgb(220, 79, 223);
+  white-space: nowrap;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+  z-index: 2;
+  overflow: hidden;
+  border-right: 0.15em solid rgb(132, 190, 205);
+  animation:
+    typing 3s steps(18, end),
+    blink-caret 0.75s step-end infinite,
+    fadeOutText 0.5s ease-out 3s forwards;
+  pointer-events: none;
+}
+
+
   /* Remove ::after for all other slides */
   .carousel-item:not(:first-child)::after {
     content: none;

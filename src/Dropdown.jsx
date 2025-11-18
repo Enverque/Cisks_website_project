@@ -214,7 +214,11 @@ function Dropdown() {
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
-                <button type="submit" className="login-btn2">Login</button>
+              
+                <Link className="login-btn2" to="/Login">
+                    Login
+                </Link>
+              
 
 
                 {/* Navbar Content */}

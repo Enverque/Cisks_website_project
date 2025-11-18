@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { GoogleOAuthProvider } from '@react-oauth/google'; // ✅ NEW
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ToastContainer, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./App.css";
@@ -30,12 +30,13 @@ import Staff from "./People/Staff";
 import Error from "./Error/Error";
 import Internship from "./Opportunity/Internship";
 import AdminPanel from './Admin_panel';
+import StudentDashboard from './StudentDashboard';
+import AdminDashboard from './AdminDashboard';
 
 function App() {
   const [loading, setLoading] = useState(false);
   const [showTopButton, setShowTopButton] = useState(false);
 
-  // ✅ Get Google Client ID from environment variable
   const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   useEffect(() => {
@@ -64,7 +65,6 @@ function App() {
   }
   
   return (
-    // ✅ Wrap entire app with GoogleOAuthProvider
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <BrowserRouter>
         <Navbar />
@@ -107,7 +107,12 @@ function App() {
           <Route exact path="/Projects" element={<Projects />} />
           <Route exact path="/People/Staff" element={<Staff />} />
           <Route exact path="/Internship" element={<Internship />} />
+          
+          {/* Dashboard Routes */}
+          <Route exact path="/StudentDashboard" element={<StudentDashboard />} />
+          <Route exact path="/AdminDashboard" element={<AdminDashboard />} />
           <Route exact path="/AdminPanel" element={<AdminPanel />} />
+          
           <Route path="*" element={<Error />} />
         </Routes>
         <Footer />
