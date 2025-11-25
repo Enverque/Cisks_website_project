@@ -72,6 +72,7 @@ function Login() {
       if (res.ok) {
         toast.success("Login successful!");
         
+        await new Promise(resolve => setTimeout(resolve, 100));
         // Redirect based on role
         if (data.role === 'admin') {
           navigate('/AdminDashboard');

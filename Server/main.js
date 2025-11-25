@@ -206,6 +206,19 @@ app.post("/api/send-otp", async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: "Email is required" });
 
+    if (!isValidDomain(email)) {
+      return res.status(403).json({ 
+        error: "Only @iiti.ac.in email addresses are allowed" 
+      });
+    }
+
+    const user = await Students.findOne({ 
+      username: { $regex: new RegExp(`^${email.trim()}$`, 'i') }
+    });
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found. Please register first." });
+    }
     const otp = generateOTP();
     otpStore[email] = { 
       otp, 
@@ -215,17 +228,31 @@ app.post("/api/send-otp", async (req, res) => {
     const mailOptions = {
       from: `CISKS Library <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: "Your OTP Code",
+      subject: "Password Reset OTP - CISKS Library",
       text: `Your OTP for password reset is: ${otp}`,
-      html: `<p>Your OTP for password reset is: <strong>${otp}</strong>. It will expire in 10 minutes.</p>`,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Password Reset Request</h2>
+          <p>You requested to reset your password for CISKS Library.</p>
+          <div style="background-color: #f4f4f4; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <p style="margin: 0; font-size: 14px; color: #666;">Your OTP is:</p>
+            <h1 style="margin: 10px 0; color: #007bff; letter-spacing: 5px;">${otp}</h1>
+          </div>
+          <p style="color: #666;">This OTP will expire in <strong>10 minutes</strong>.</p>
+          <p style="color: #999; font-size: 12px;">If you didn't request this, please ignore this email.</p>
+        </div>
+      `
     };
 
     await transporter.sendMail(mailOptions);
-    res.json({ message: "OTP sent successfully!" });
+    res.json({ message: "OTP sent successfully to your email!" });
 
   } catch (error) {
     console.error("Error sending OTP:", error);
-    res.status(500).json({ error: "Failed to send OTP" });
+    res.status(500).json({ 
+      error: "Failed to send OTP. Please try again.",
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
@@ -289,13 +316,13 @@ app.post("/api/Register", async (req, res) => {
     // Validate format based on role
     if (role === 'student' && !isValidStudentId(trimmedUsername)) {
       return res.status(400).json({ 
-        Message: "Invalid student ID format. Student IDs must contain letters followed by digits (e.g., che230008016@iiti.ac.in)" 
+        Message: "Invalid student ID format." 
       });
     }
 
     if (role === 'admin' && !isValidAdminEmail(trimmedUsername)) {
       return res.status(400).json({ 
-        Message: "Invalid admin email format. Admin emails must contain only letters before @ (e.g., admin@iiti.ac.in)" 
+        Message: "Invalid admin email format." 
       });
     }
 
@@ -347,7 +374,7 @@ app.post("/api/Login", async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
     
-    const trimmedUsername = username.trim();
+    const trimmedUsername = username.trim().toLowerCase();
     const trimmedPassword = password.trim();
 
     // Validate @iiti.ac.in domain
@@ -451,9 +478,11 @@ app.post("/api/Login", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: true, // Always true since you're using HTTPS
+      sameSite: "None", // Required for cross-origin
       maxAge: maxAge,
+      path: '/',
+      domain: '.iiti.ac.in' // ⭐ ADD THIS - allows cookie across subdomains
     });
 
     res.status(200).json({ 
@@ -602,6 +631,8 @@ app.post("/api/Logout", (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "None",
+    path: '/',
+    domain: '.iiti.ac.in'
   });
   res.json({ message: "Logged out successfully" });
 });

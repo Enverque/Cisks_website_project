@@ -5,25 +5,59 @@ import Students from "../models/Reg_students.js";
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-
-  const JWT_SECRET = process.env.JWT_SECRET;
-  // console.log("JWT_SECRET Admin : ", JWT_SECRET);
-
   try {
     const token = req.cookies.token;
-    if (!token) return res.status(401).json({ error: "Unauthorized" });
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);    
-    const user = await Students.findById(decoded.id);
     
+    console.log('🔍 VerifyAdmin - Cookie received:', !!token);
     
-    if (!user || !user.isAdmin) {
-      return res.status(403).json({ error: "Admin access required" });
+    if (!token) {
+      return res.json({ 
+        valid: false,
+        error: "No token provided" 
+      });
     }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('✅ Token decoded for user ID:', decoded.id);
     
-    res.json({ valid: true });
+    const user = await Students.findById(decoded.id).select("-password");
+    
+    if (!user) {
+      console.log('❌ User not found');
+      return res.json({ 
+        valid: false,
+        error: "User not found" 
+      });
+    }
+
+    // Check if user is admin
+    if (user.role !== 'admin' && !user.isAdmin) {
+      console.log('❌ User is not admin. Role:', user.role);
+      return res.json({ 
+        valid: false,
+        error: "Admin access required" 
+      });
+    }
+
+    console.log('✅ Admin verified:', user.username);
+
+    // Return complete user data
+    res.json({ 
+      valid: true,
+      userId: user._id,
+      username: user.username,
+      name: user.name,
+      role: user.role,
+      isAdmin: true,
+      profilePicture: user.profilePicture || null
+    });
+    
   } catch (error) {
-    res.status(401).json({ error: "Invalid token" });
+    console.error("❌ VerifyAdmin error:", error.message);
+    res.json({ 
+      valid: false,
+      error: "Invalid token" 
+    });
   }
 });
 

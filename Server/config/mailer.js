@@ -11,4 +11,13 @@ const transporter = nodemailer.createTransport({
   maxMessages: 10
 });
 
+// Verify connection on startup
+transporter.verify((error, success) => {
+  if (error) {
+    console.error('❌ Email transporter error:', error);
+  } else {
+    console.log('✅ Email server is ready to send messages');
+  }
+});
+
 export default transporter;
